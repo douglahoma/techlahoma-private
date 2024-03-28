@@ -1,5 +1,4 @@
-**/.env
-
-**/.vscode/
-**/__pycache__/
-**/.DS_Store #Finder uses this on macOS for internal housekeeping and it WILL show up on a commit from mac
+.env
+.vscode
+__pycache__
+.DS_Store #Finder uses this on macOS for internal housekeeping and it WILL show up on a commit from mac
