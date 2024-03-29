@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, redirect, url_for, session
+from flask import Flask, render_template, redirect, url_for, session, request
 from dotenv import load_dotenv
 import requests
 
@@ -24,7 +24,8 @@ def landing():
 # OAuth Callback Route
 @app.route('/authorize')
 def authorize():
-    authorization_code = requests.args.get('code')
+    # authorization_code = requests.args.get('code')
+    authorization_code = request.args.get('code')
     
     # Make HTTP request to Neon CRM to request the access token
     neon_access_token_url = 'https://app.neoncrm.com/np/oauth/token'
@@ -42,7 +43,13 @@ def authorize():
     session['access_token'] = access_token
     
     # Redirect to another route
-    return redirect(url_for('neon_redirect'))
+    # return redirect(url_for('neon_redirect'))
+    return render_template('neon_redirect.html', user=access_token)
+@app.route('/neon_redirect')
+def neon_redirect(user_id):
+    return render_template('neon_redirect.html')
+
+
 # Error Page
 @app.route('/error')
 def error():

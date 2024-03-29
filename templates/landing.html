@@ -4,25 +4,67 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Techlahoma Log In</title>
+    <!-- Pico Css -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.classless.min.css"/>
 </head>
 <body>
- <!-- Script for NeonOAuth2 -->
- <script id="NeonOAuth2Script">
-    (function(w,d,t,s,p,c,r,u){
-        var a=d.createElement(t);
-        a.async=1;
-        a.src=u+s;
-        var es=d.getElementsByTagName(t);
-        var e=es[es.length-1];
-        e.parentNode.insertBefore(a,e);
-        w[p]=c;
-        w[r]=u;
-    })(window,document,'script','/js/oauth/npsi.js','client_id','2h4SG1InwJNsWxevrpFyW65DGAZofW0YnyjJ4s8fqGqGcm331x_tMjr5v0-eUJNr2yC0-kyZ2Ya3CNptMo1gFA==','domain','https://techlahoma.app.neoncrm.com/np');
+    <style>
+        body {
+            background-color: #363636;
+        }
+        header {
+            background-color: #000000;
+            height: 100px;
+        }
+        header > img {
+            height: 100%;
+        }
+    
+        main > .cont {
+            max-width: fit-content;
+            margin: 0 auto;
+        }
+    </style>
+    <header>
+        <img
+        src="{{url_for('static', filename='techlahoma_white.png')}}"
+        alt="Techlahoma Logo"
+        >
+    </header>
+    <main>
+        <div class="cont">
+            <button onclick="{{login_url}}">Log in with NeonCRM</button>
+        </div>
+        <script id = "NeonOAuth2Script">
+            (function(w,d,t,s,p,c,r,u){a=d.createElement(t);a.async=1;
+              a.src=u+s;es=d.getElementsByTagName(t);e=es[es.length-1];
+              e.parentNode.insertBefore(a,e);w[p]=c;w[r]=u;
+            })(window,document,'script','/js/oauth/npsi.js','client_id',
+            '2h4SG1InwJNsWxevrpFyW65DGAZofW0YnyjJ4s8fqGqGcm331x_tMjr5v0-eUJNr2yC0-kyZ2Ya3CNptMo1gFA==','domain',
+            'https://techlahoma.app.neoncrm.com/np');
+            setting = {
+              "redirect_uri":"127.0.0.1:5000/authorize" // required
+            }
+        </script>
+    </main>
+     <!-- Script for NeonOAuth2
+     <script id="NeonOAuth2Script">
+        (function(w,d,t,s,p,c,r,u){
+            var a=d.createElement(t);
+            a.async=1;
+            a.src=u+s;
+            var es=d.getElementsByTagName(t);
+            var e=es[es.length-1];
+            e.parentNode.insertBefore(a,e);
+            w[p]=c;
+            w[r]=u;
+        })(window,document,'script','/js/oauth/npsi.js','client_id','2h4SG1InwJNsWxevrpFyW65DGAZofW0YnyjJ4s8fqGqGcm331x_tMjr5v0-eUJNr2yC0-kyZ2Ya3CNptMo1gFA==','domain','https://techlahoma.app.neoncrm.com/np');
 
-    // Define redirect_uri
-    var setting = {
-        "redirect_uri": "127.0.0.1" // Replace with your actual redirect URI
-    }
-</script>
+        // Define redirect_uri
+        var setting = {
+            "redirect_uri": "127.0.0.1" // Replace with your actual redirect URI
+        }
+    </script> -->
 </body>
+
 </html>
