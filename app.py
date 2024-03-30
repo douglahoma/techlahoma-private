@@ -110,6 +110,42 @@ def authorize():
             if user_session_id:
                 # and print it out for logging/debugging purposes
                 print('Great news! Login worked. User session ID is: ', user_session_id)
+                #######################################################################
+                # ------------ Get the Consituent's Information --------------------- #
+                # first, construct and make the API call
+                consituent_info_url = f"https://api.neoncrm.com/neonws/services/api/account/retrieveIndividualAccount?userSessionId={user_session_id}&accountId={access_token}"
+                constituent_info_response = requests.get(consituent_info_url)
+                # then, check to see if the API call was successful
+                if constituent_info_response.status_code == 200:
+                    # if it was, parse it as JSON
+                    constituent_data = constituent_info_response.json()
+                    # then grab the data about the account
+                    constituent_account_data = constituent_data['retrieveIndividualAccountResponse']['individualAccount']
+                    # try to grab the preferred name, but failing that, get the first name
+                    constituent_name = constituent_account_data['primaryContact'].get('preferredName', constituent_account_data['primaryContact'].get('firstName'))
+                    # print the name for debugging
+                    print(f"name: {constituent_name}")
+                    #######################################################################
+                    # ------------ Get the Points Count for the Constituent-------------- #
+                    # first, construct and make the API call
+                    points_url = f"https://api.neoncrm.com/neonws/services/api/customObjectRecord/listCustomObjectRecords?userSessionId={user_session_id}&objectApiName=Points_c&customObjectSearchCriteriaList.customObjectSearchCriteria.criteriaField=Constituent_c&customObjectSearchCriteriaList.customObjectSearchCriteria.operator=EQUAL&customObjectSearchCriteriaList.customObjectSearchCriteria.value={access_token}"
+                    points_response = requests.get(points_url)
+                    print(points_response)
+                    # then, check to see if points API call was successful
+                    if points_response.status_code == 200:
+                        # if it was, parse it as JSON
+                        points_data = points_response.json()
+                        print(points_data)
+                        total_points = points_data['listCustomObjectRecordsResponse']['page']['totalResults']
+                        # and print the response for debugging
+                        print(f"Total Points_c objects associated with Constituent ID {access_token}: {total_points}")
+                    else:
+                        print("Failed to retrieve any points object records", response.status_code)
+
+                else:
+                    # handle case where API call is not successful
+                    print(f"Could not retrieve account info. Status code: {constituent_info_response.status_code}")
+
             else:
                 print("login failed. No user session ID received.")
         else:
@@ -134,7 +170,7 @@ def authorize():
     # ------------------------------------------------------------------------------- #
 
 
-    return render_template('neon_redirect.html', user=access_token, logout_url=logout_url)
+    return render_template('neon_redirect.html', user=access_token, logout_url=logout_url, name=constituent_name, total_points=total_points)
 
 # @app.route('/neon_redirect')
 # def neon_redirect(user_id):
