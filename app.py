@@ -21,7 +21,7 @@ session_secret_key = os.getenv("SESSION_SECRET_KEY").encode()
 # set a secret key for the 'session' object.
 # The 'session' object in Flask is what allows us to store information
 # specific to a user from one request to the next. This is implemented
-# on top of cookies signs the cookies cryptographically. As a result,
+# on top of cookies and signs the cookies cryptographically. As a result,
 # while the user is able to look at the contents of the cookie, they cannot
 # modify it, unless they know the secret key used for signing.
 # In order to use sessions we must first set a secret key.
