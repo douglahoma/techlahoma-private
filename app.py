@@ -150,7 +150,7 @@ def error():
 @app.route('/logout')
 def logout():
     session.clear()
-    return redirect(url_for('landing'))
+    return render_template('landing.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
