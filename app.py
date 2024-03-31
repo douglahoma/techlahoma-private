@@ -170,7 +170,7 @@ def authorize():
     # ------------------------------------------------------------------------------- #
 
 
-    return render_template('neon_redirect.html', user=access_token, logout_url=logout_url, name=constituent_name, total_points=total_points)
+    return render_template('neon_redirect.html', user=access_token, logout_url=logout_url, name=constituent_name, total_points=total_points, points_data=points_data)
 
 # @app.route('/neon_redirect')
 # def neon_redirect(user_id):
