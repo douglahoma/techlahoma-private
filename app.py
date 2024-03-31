@@ -128,7 +128,7 @@ def authorize():
                     #######################################################################
                     # ------------ Get the Points Count for the Constituent-------------- #
                     # first, construct and make the API call
-                    points_url = f"https://api.neoncrm.com/neonws/services/api/customObjectRecord/listCustomObjectRecords?userSessionId={user_session_id}&objectApiName=Points_c&customObjectSearchCriteriaList.customObjectSearchCriteria.criteriaField=Constituent_c&customObjectSearchCriteriaList.customObjectSearchCriteria.operator=EQUAL&customObjectSearchCriteriaList.customObjectSearchCriteria.value={access_token}"
+                    points_url = f"https://api.neoncrm.com/neonws/services/api/customObjectRecord/listCustomObjectRecords?userSessionId={user_session_id}&objectApiName=Points_c&customObjectOutputFieldList.customObjectOutputField.label=Points Activity&customObjectOutputFieldList.customObjectOutputField.columnName=name&customObjectSearchCriteriaList.customObjectSearchCriteria.criteriaField=Constituent_c&customObjectSearchCriteriaList.customObjectSearchCriteria.operator=EQUAL&customObjectSearchCriteriaList.customObjectSearchCriteria.value={access_token}"
                     points_response = requests.get(points_url)
                     print(points_response)
                     # then, check to see if points API call was successful
