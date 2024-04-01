@@ -1,0 +1,105 @@
+body {
+    margin: 0;
+    background-color: #363636;
+}
+
+header {
+    background-color: #000000;
+    height: 100px;
+}
+header > img {
+    height: 100%;
+}
+
+main > .cont {
+    max-width: fit-content;
+    margin: 30px auto;
+    height: 30vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+main > div > a {
+    background-color: #F8C702;
+    color: #000000;
+    border-radius: 50px;
+    padding: 16px 24px;
+    width: fit-content;
+    height: fit-content;
+}
+
+/* Divider between button section & FaQ */
+.poly-wrapper {
+    background-color: #F8C702;
+}
+.polygon {
+    /* clip-path: polygon(0 0, 100% 0, 100% 80%, 75% 100%, 0 80%); */
+    clip-path: polygon(0 0, 100% 0, 75% 100%);
+    background-color: #363636;
+    width: 100%;
+    height: 35px;
+}
+/* FaQ Section */
+.faq-wrapper {
+    background-color: #F8C702;
+    padding: 20px;
+    height: 1000px;
+}
+.faq-wrapper h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+/* FaQ Dropdown */
+span {
+    padding : 30px;
+    background : #D9D9D9; 
+    color : black;
+    font-size : 1;
+    cursor : pointer;
+    display: block;
+    border : 1px solid #000;
+  }
+  
+span::after {
+    float: right;
+    right: 10%;
+    content: "\\/";
+  }
+.faq-content {
+    /* border box */
+    box-sizing: border-box;
+    clear:both;
+    width:100%;
+    height:0px;
+    overflow: hidden;
+    text-align: left;
+    padding-left: 20px;
+
+    transition: .4s ease;
+    background-color: #d9d9d9;
+    /* border : 1px solid #000; */
+  }
+  #q1 {position: absolute; opacity: 0; height: 0px;} 
+  #q1:checked + #a1 {height: 100px; padding: 20px;} 
+
+  #q2 {position: absolute; opacity: 0; height: 0px;} 
+  #q2:checked + #a2 {height: 100px; padding: 20px;} 
+
+
+/* Weird link stuff, still unable to remove underline from button */
+a.neonCRM-link {
+    text-decoration: none !important;
+}
+a:link { 
+    text-decoration: none; 
+} 
+a:visited { 
+    text-decoration: none; 
+} 
+a:hover { 
+    text-decoration: none; 
+} 
+a:active { 
+    text-decoration: none; 
+}

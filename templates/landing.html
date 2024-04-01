@@ -5,27 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Techlahoma Log In</title>
     <!-- Pico Css -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.classless.min.css"/>
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.classless.min.css"/> -->
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{url_for('static', filename='landing.css')}}"/>
+    <!-- <link rel="stylesheet" href="../static/landing.css"> -->
 </head>
 <body>
-    <style>
-        body {
-            background-color: #363636;
-        }
-        header {
-            background-color: #000000;
-            height: 100px;
-        }
-        header > img {
-            height: 100%;
-        }
-    
-        main > .cont {
-            max-width: fit-content;
-            margin: 0 auto;
-        }
-    </style>
+
     <header>
+        <!-- src for flask -->
+        <!-- src="{{url_for('static', filename='techlahoma_white.png')}}" -->
+        <!-- src for "LiveServer VSCode extention" -->
+        <!-- src="../static/techlahoma_white.png" -->
         <img
         src="{{url_for('static', filename='techlahoma_white.png')}}"
         alt="Techlahoma Logo"
@@ -33,38 +24,27 @@
     </header>
     <main>
         <div class="cont">
-            <button onclick="{{login_url}}">Log in with NeonCRM</button>
+            <a class="neonCRM-link" href="{{login_url}}">Log in With NeonCRM</a>
         </div>
-        <script id = "NeonOAuth2Script">
-            (function(w,d,t,s,p,c,r,u){a=d.createElement(t);a.async=1;
-              a.src=u+s;es=d.getElementsByTagName(t);e=es[es.length-1];
-              e.parentNode.insertBefore(a,e);w[p]=c;w[r]=u;
-            })(window,document,'script','/js/oauth/npsi.js','client_id',
-            '2h4SG1InwJNsWxevrpFyW65DGAZofW0YnyjJ4s8fqGqGcm331x_tMjr5v0-eUJNr2yC0-kyZ2Ya3CNptMo1gFA==','domain',
-            'https://techlahoma.app.neoncrm.com/np');
-            setting = {
-              "redirect_uri":"127.0.0.1:5000/authorize" // required
-            }
-        </script>
-    </main>
-     <!-- Script for NeonOAuth2
-     <script id="NeonOAuth2Script">
-        (function(w,d,t,s,p,c,r,u){
-            var a=d.createElement(t);
-            a.async=1;
-            a.src=u+s;
-            var es=d.getElementsByTagName(t);
-            var e=es[es.length-1];
-            e.parentNode.insertBefore(a,e);
-            w[p]=c;
-            w[r]=u;
-        })(window,document,'script','/js/oauth/npsi.js','client_id','2h4SG1InwJNsWxevrpFyW65DGAZofW0YnyjJ4s8fqGqGcm331x_tMjr5v0-eUJNr2yC0-kyZ2Ya3CNptMo1gFA==','domain','https://techlahoma.app.neoncrm.com/np');
+        <div class="poly-wrapper">
+            <div class="polygon"></div>
+        </div>
 
-        // Define redirect_uri
-        var setting = {
-            "redirect_uri": "127.0.0.1" // Replace with your actual redirect URI
-        }
-    </script> -->
+        <div class="faq-wrapper">
+            <h1>First time Logging in?</h1>
+            <p>Check out these helpful resources</p>
+            <label for="q1"><span>First time logging in to NeonCRM</span></label>
+            <input type="checkbox" id="q1">
+            <div class="faq-content" id="a1">
+                <p>First time logging in to NeonCRM</p>
+            </div>
+            <label for="q2"><span>Dont have a Techlahoma Account?</span></label>
+            <input type="checkbox" id="q2">
+            <div class="faq-content" id="a2">
+                <p>make a techlahoma account</p>
+            </div>
+        </div>
+    </main>
 </body>
 
 </html>
