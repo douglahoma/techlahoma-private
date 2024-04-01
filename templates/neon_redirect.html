@@ -4,9 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="../static/neon_redirect.css">
 </head>
 <body>
-    <p>Successfully Checked in {{user}} {{name}}! Total points: {{total_points}}</p>
-    <a href='https://techlahoma.app.neoncrm.com/np/logout.do?targetUrl={{ logout_url }}'>log out</a>
+    <header>
+        <!-- src for flask -->
+        <!-- src="{{url_for('static', filename='techlahoma_white.png')}}" -->
+        <!-- src for "LiveServer VSCode extention" -->
+        <!-- src="../static/techlahoma_white.png" -->
+        <img
+        src="../static/techlahoma_white.png"
+        alt="Techlahoma Logo"
+        >
+    </header>
+    <main>
+        <h1>Successfully Checked in <u>{{name}}</u></h1>
+        <div class="container rewards">
+            <p id="points"><span>3/</span><span>12</span></p>
+        </div>
+        <div class="container visualization">Visualization Goes Here</div>
+        <a href="#" class="button-secondary">Rewards Details</a>
+        <a href='https://techlahoma.app.neoncrm.com/np/logout.do?targetUrl={{ logout_url }}'>log out</a>
+    </main>
 </body>
 </html>

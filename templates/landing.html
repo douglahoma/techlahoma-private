@@ -7,8 +7,8 @@
     <!-- Pico Css -->
     <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.classless.min.css"/> -->
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="{{url_for('static', filename='landing.css')}}"/>
-    <!-- <link rel="stylesheet" href="../static/landing.css"> -->
+    <!-- <link rel="stylesheet" href="{{url_for('static', filename='landing.css')}}"/> -->
+    <link rel="stylesheet" href="../static/landing.css">
 </head>
 <body>
 
@@ -18,13 +18,13 @@
         <!-- src for "LiveServer VSCode extention" -->
         <!-- src="../static/techlahoma_white.png" -->
         <img
-        src="{{url_for('static', filename='techlahoma_white.png')}}"
+        src="../static/techlahoma_white.png"
         alt="Techlahoma Logo"
         >
     </header>
     <main>
         <div class="cont">
-            <a class="neonCRM-link" href="{{login_url}}">Log in With NeonCRM</a>
+            <a class="neonCRM-link" href="{{login_url}}" style="text-decoration:none" >Log in With NeonCRM</a>
         </div>
         <div class="poly-wrapper">
             <div class="polygon"></div>

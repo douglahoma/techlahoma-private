@@ -29,6 +29,10 @@ main > div > a {
     height: fit-content;
 }
 
+.neonCRM-link, a:link, a:visited {
+    text-decoration: none;
+}
+
 /* Divider between button section & FaQ */
 .poly-wrapper {
     background-color: #F8C702;
@@ -85,21 +89,3 @@ span::after {
 
   #q2 {position: absolute; opacity: 0; height: 0px;} 
   #q2:checked + #a2 {height: 100px; padding: 20px;} 
-
-
-/* Weird link stuff, still unable to remove underline from button */
-a.neonCRM-link {
-    text-decoration: none !important;
-}
-a:link { 
-    text-decoration: none; 
-} 
-a:visited { 
-    text-decoration: none; 
-} 
-a:hover { 
-    text-decoration: none; 
-} 
-a:active { 
-    text-decoration: none; 
-}

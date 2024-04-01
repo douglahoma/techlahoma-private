@@ -1,0 +1,53 @@
+body {
+    margin: 0;
+    background-color: #363636;
+    color: white;
+    font-family: 'Roboto', sans-serif;
+}
+
+header {
+    background-color: #000000;
+    height: 100px;
+}
+header > img {
+    height: 100%;
+}
+
+h1 {
+    font-size: 1.5rem;
+    font-weight: normal;
+    /* not bold */
+
+}
+main {
+    margin: 30px;
+}
+
+.rewards #points :first-child {
+    font-size: 1.5rem;
+}
+
+.visualization {
+    width: 100%;
+    padding: 16px;
+    background-color: #F8C702;
+    box-sizing: border-box;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+.button-secondary {
+    color: #BCBCBC;
+    border-radius: 50px;
+    padding: 8px 12px;
+    font-size: 12px;
+    margin-top: 12px;
+    /* width: fit-content;
+    height: fit-content; */
+
+    border: 1px solid #999999;
+    display: inline-block;
+}
