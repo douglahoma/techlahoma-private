@@ -2,6 +2,8 @@ import os
 from flask import Flask, render_template, redirect, url_for, session, request
 from dotenv import load_dotenv
 import requests
+from datetime import datetime
+import json
 
 app = Flask(__name__)
 
@@ -126,19 +128,53 @@ def authorize():
                     # print the name for debugging
                     print(f"name: {constituent_name}")
                     #######################################################################
-                    # ------------ Get the Points Count for the Constituent-------------- #
+                    # ------------ Get the Points Info for the Constituent-------------- #
                     # first, construct and make the API call
-                    points_url = f"https://api.neoncrm.com/neonws/services/api/customObjectRecord/listCustomObjectRecords?userSessionId={user_session_id}&objectApiName=Points_c&customObjectOutputFieldList.customObjectOutputField.label=Points Activity&customObjectOutputFieldList.customObjectOutputField.columnName=name&customObjectSearchCriteriaList.customObjectSearchCriteria.criteriaField=Constituent_c&customObjectSearchCriteriaList.customObjectSearchCriteria.operator=EQUAL&customObjectSearchCriteriaList.customObjectSearchCriteria.value={access_token}"
+                    # comment out the old points_url = f"https://api.neoncrm.com/neonws/services/api/customObjectRecord/listCustomObjectRecords?userSessionId={user_session_id}&objectApiName=Points_c&customObjectOutputFieldList.customObjectOutputField.label=Points Activity&customObjectOutputFieldList.customObjectOutputField.columnName=name&customObjectSearchCriteriaList.customObjectSearchCriteria.criteriaField=Constituent_c&customObjectSearchCriteriaList.customObjectSearchCriteria.operator=EQUAL&customObjectSearchCriteriaList.customObjectSearchCriteria.value={access_token}"
+                    points_url = f"https://api.neoncrm.com/neonws/services/api/customObjectRecord/listCustomObjectRecords?userSessionId={user_session_id}&objectApiName=Points_c&customObjectSearchCriteriaList.customObjectSearchCriteria.criteriaField=Constituent_c&customObjectSearchCriteriaList.customObjectSearchCriteria.operator=EQUAL&customObjectSearchCriteriaList.customObjectSearchCriteria.value={access_token}&customObjectOutputFieldList.customObjectOutputField.label=Points Activity&customObjectOutputFieldList.customObjectOutputField.columnName=name&customObjectOutputFieldList.customObjectOutputField.label=Created on&customObjectOutputFieldList.customObjectOutputField.columnName=createTime&customObjectOutputFieldList.customObjectOutputField.label=type&customObjectOutputFieldList.customObjectOutputField.columnName=type_c&customObjectOutputFieldList.customObjectOutputField.label=subtype&customObjectOutputFieldList.customObjectOutputField.columnName=subtype_c"
                     points_response = requests.get(points_url)
+                    # print the raw response for debugging
                     print(points_response)
                     # then, check to see if points API call was successful
                     if points_response.status_code == 200:
                         # if it was, parse it as JSON
                         points_data = points_response.json()
+                        # print it for debugging
                         print(points_data)
-                        total_points = points_data['listCustomObjectRecordsResponse']['page']['totalResults']
-                        # and print the response for debugging
-                        print(f"Total Points_c objects associated with Constituent ID {access_token}: {total_points}")
+                        # Now we'll make a helper function to parse the date from the response records
+                        def parse_date(date_string):
+                            return datetime.strptime(date_string, "%m/%d/%y")
+                        # And then we can extract and transform the points records
+                        events = []
+                        for item in points_data["listCustomObjectRecordsResponse"]["searchResults"]["nameValuePairs"]:
+                            event = {}
+                            for pair in item["nameValuePair"]:
+                                if pair["name"] == "type_c":
+                                    event["type"] = pair["value"]
+                                elif pair["name"] == "subtype_c":
+                                    event["subtype"] = pair["value"]
+                                elif pair["name"] == "createTime":
+                                    event["date"] = datetime.strptime(pair["value"], "%m/%d/%Y %H:%M:%S").strftime("%m/%d/%y")
+                            events.append(event)
+                        # Now we will use our helper function to sort the events list based on the date, in descending order
+                        # (this would be extremely error-prone if we were trying to sort them by the date strings they now have)
+                        events.sort(key=lambda x: parse_date(x["date"]), reverse=True)
+                        # Then we can construct our final dictionary that holds the points total and the array of points records with details
+                        points_dict = {
+                            "points": points_data["listCustomObjectRecordsResponse"]["page"]["totalResults"],
+                            "events": events
+                        }
+                        print(points_dict)
+                    ############ DEPRECATED BY DOUGLAS #####################################
+                    # # then, check to see if points API call was successful
+                    # if points_response.status_code == 200:
+                    #     # if it was, parse it as JSON
+                    #     points_data = points_response.json()
+                    #     print(points_data)
+                    #     total_points = points_data['listCustomObjectRecordsResponse']['page']['totalResults']
+                    #     # and print the response for debugging
+                    #     print(f"Total Points_c objects associated with Constituent ID {access_token}: {total_points}")
+                    ############# END DEPRECATED SECTION ######################################
                     else:
                         print("Failed to retrieve any points object records", response.status_code)
 
@@ -170,7 +206,7 @@ def authorize():
     # ------------------------------------------------------------------------------- #
 
 
-    return render_template('neon_redirect.html', user=access_token, logout_url=logout_url, name=constituent_name, total_points=total_points, points_data=points_data)
+    return render_template('neon_redirect.html', user=access_token, logout_url=logout_url, name=constituent_name, points_dict=points_dict)
 
 # @app.route('/neon_redirect')
 # def neon_redirect(user_id):
