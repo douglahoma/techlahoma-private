@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="../static/neon_redirect.css">
+    <!-- <link rel="stylesheet" href="../static/neon_redirect.css"> -->
+    <link rel="stylesheet" href="{{url_for('static', filename='neon_redirect.css')}}">
 </head>
 <body>
     <header>
@@ -13,18 +14,61 @@
         <!-- src for "LiveServer VSCode extention" -->
         <!-- src="../static/techlahoma_white.png" -->
         <img
-        src="../static/techlahoma_white.png"
+        src="{{url_for('static', filename='techlahoma_white.png')}}"
         alt="Techlahoma Logo"
         >
     </header>
     <main>
         <h1>Successfully Checked in <u>{{name}}</u></h1>
         <div class="container rewards">
-            <p id="points"><span>3/</span><span>12</span></p>
+            <p id="points"><span id="points_num">{{points_dict.points}}</span><span>/</span><span> 12</span></p>
         </div>
-        <div class="container visualization">Visualization Goes Here</div>
+        <div class="container">
+            <div class="visualization"> <div class="bar"></div></div>
+        </div>
         <a href="#" class="button-secondary">Rewards Details</a>
-        <a href='https://techlahoma.app.neoncrm.com/np/logout.do?targetUrl={{ logout_url }}'>log out</a>
+        <!-- <a href='https://techlahoma.app.neoncrm.com/np/logout.do?targetUrl={{ logout_url }}'>log out</a> -->
+        <div class="container card">
+            <div class="cardInner image">
+                <!-- <img src="../static/placeholder_image.png" alt="placeholder"> -->
+                <img src="{{url_for('static', filename='placeholder_image.png')}}" alt="placeholder">
+            </div>
+            <div class="cardInner content">
+                <h2>Collect</h2>
+                <h1>2</h1>
+                <h2>Bonus Points</h2>
+                <a href="#" class="button-primary">Start</a>
+            </div>
+        </div>
+        <div class="container">
+            <h1>Points History</h1>
+            <ul>
+                {% for event in points_dict.events %}
+                    <li>
+                        <div class="container points-card">
+                            <div class="image">
+                                <!-- <img src="../static/placeholder_image.png" alt="placeholder"> -->
+                                <img src="{{url_for('static', filename='placeholder_image.png')}}" alt="placeholder">
+                            </div>
+                            <div class="content">
+                                <p>{{event.type}}</p>
+                                <p>{{event.subtype}}</p>
+                                <p>{{event.date}}</p>
+                            </div>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
     </main>
+    <script defer="true">
+        const bar = document.querySelector('.bar');
+        const points = document.querySelector('#points_num').innerHTML;
+        const percent = (points / 12) * 100;
+        /* cast string to int */
+        console.log(points);
+        bar.style.width = percent + '%';
+        console.log(percent);
+    </script>
 </body>
 </html>
