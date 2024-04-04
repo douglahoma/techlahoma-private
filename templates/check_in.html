@@ -9,34 +9,37 @@
 <body>
 
     <header>
-
         <img
         src="../static/techlahoma_white.png"
         alt="Techlahoma Logo"
         >
     </header>
     <main>
-        <div class="cont">
-            <a class="neonCRM-link" href="{{login_url}}" style="text-decoration:none" >Log in With NeonCRM</a>
-        </div>
-        <div class="poly-wrapper">
-            <div class="polygon"></div>
-        </div>
+        <form action="{{ url_for('post_checkin') }}" method="post">
+            <select name="selected_group">
+                <option value="SheCodesTulsa">SheCodesTulsa</option>
+                <option value="Tulsa Web Devs">Tulsa Web Devs</option>
+                <option value="Tulsa UX">Tulsa UX</option>
+                <option value="Tulsa Game Developers">Tulsa Game Developers</option>
+                <option value="Tulsa Developers Association">Tulsa Developers Association</option>
+                <option value="Tulsa Agile Practitioners">Tulsa Agile Practitioners</option>
+                <option value="Tulsa Area Techlahoma">Tulsa Area Techlahoma</option>
+                <option value="OKC-Sharp">OKC-Sharp</option>
+                <option value="OKC LUGnuts">OKC LUGnuts</option>
+                <option value="Oklahoma Game Developers">Oklahoma Game Developers</option>
+                <option value="Oklahoma City Java Users">Oklahoma City Java Users</option>
+                <option value="Oklahoma City Techlahoma">Oklahoma City Techlahoma</option>
+                <option value="UX Connect OKC">UX Connect OKC</option>
+                <option value="OKC WebDevs">OKC WebDevs</option>
+                <option value="OKC Open Source Hardware">OKC Open Source Hardware</option>
+                <option value="Pythonistas">Pythonistas</option>
+                <option value="Salesforce Meetup Group">Salesforce Meetup Group</option>
+                <option value="SheCodesOKC">SheCodesOKC</option>
+            </select>
+            <button type="submit">Submit</button>
+        </form>
 
-        <div class="faq-wrapper">
-            <h1>First time Logging in?</h1>
-            <p>Check out these helpful resources</p>
-            <label for="q1"><span>First time logging in to NeonCRM</span></label>
-            <input type="checkbox" id="q1">
-            <div class="faq-content" id="a1">
-                <p>First time logging in to NeonCRM</p>
-            </div>
-            <label for="q2"><span>Dont have a Techlahoma Account?</span></label>
-            <input type="checkbox" id="q2">
-            <div class="faq-content" id="a2">
-                <p>make a techlahoma account</p>
-            </div>
-        </div>
+
     </main>
 </body>
 
