@@ -23,8 +23,12 @@ main {
     margin: 30px;
 }
 
-.rewards #points :first-child {
+.rewards #points :first-child, .rewards #points :nth-child(2) {
     font-size: 1.5rem;
+}
+.rewards #points :last-child {
+    font-size: 1.125rem;
+    color:rgba(248, 199, 2, 1);
 }
 
 .visualization {
@@ -97,7 +101,7 @@ a {
 
 }
 .card h2 {
-    font-size: 1.2rem;
+    font-size: 1rem;
     padding: 0;
     margin: 0;
 }
@@ -130,7 +134,13 @@ li {
 .container .image img {
     width: 100%;
 }
+.container.card {
+    margin-top: 24px;
+}
 
+h1#pointshistory {
+    margin-top: 24px;
+}
 .points-card {
     width: 100%;
     display: flex;
