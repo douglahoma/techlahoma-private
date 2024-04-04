@@ -123,6 +123,8 @@ def authorize():
                 if constituent_info_response.status_code == 200:
                     # if it was, parse it as JSON
                     constituent_data = constituent_info_response.json()
+                    # print the response for debugging
+                    print(constituent_data)
                     # then grab the data about the account
                     constituent_account_data = constituent_data['retrieveIndividualAccountResponse']['individualAccount']
                     # try to grab the preferred name, but failing that, get the first name
@@ -131,6 +133,7 @@ def authorize():
                     print(f"name: {constituent_name}")
                     # and save the user's name to the session
                     session['constituent_name'] = constituent_name
+                    ### Deal with the exception later
             else:
                 print("login failed. No user session ID received.")
         else:
@@ -173,6 +176,7 @@ def post_checkin():
     print(selected_group)
     # First, let's create the new Points record in NeonCRM
     # we begin by creating our API request
+    # Note ---- we need to double-check that it's okay ------ WE HAVE NOT CODED THAT PART YET
     user_session_id = session['user_session_id']
     access_token = session['access_token']
     # and to include today's date in the name of the record, we'll need to get it
