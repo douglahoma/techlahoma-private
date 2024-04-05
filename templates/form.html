@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <link rel="stylesheet" href="./form.css"> -->
+    <link rel="stylesheet" href="{{url_for('static', filename='form.css')}}">
+
+    <title>{% block title %}Form{% endblock %}</title>
+</head>
+<body>
+    <header>
+        {% block header %}
+        <!-- src for flask -->
+        <!-- src="{{url_for('static', filename='techlahoma_white.png')}}" -->
+        <!-- src for "LiveServer VSCode extention" -->
+        <!-- src="../static/techlahoma_white.png" -->
+        <img
+        src="../static/techlahoma_black.png"
+        alt="Techlahoma Logo"
+        >
+        {% endblock %}
+    </header>
+    {% block formAction %}
+    <form action="">
+    {% endblock %}
+        {% block formContent %}
+        <label for="email">Email:</label>
+        <input type="text" name="email" required/>
+        <label for="phone">Phone Number:</label>
+        <input type="text" name="phone" required/>
+        <button type="submit">Submit</button>
+        {% endblock %}
+    </form>
+</body>
+</html>
