@@ -111,6 +111,9 @@ def authorize():
             if user_session_id:
                 # and print it out for logging/debugging purposes
                 print('Great news! Login worked. User session ID is: ', user_session_id)
+                ###! FOR MOCKUP ONLY: And store it in the session (remember, it only lasts 10 minutes)
+                session['user_session_id'] = user_session_id
+
                 #######################################################################
                 # ------------ Get the Consituent's Information --------------------- #
                 # first, construct and make the API call
@@ -120,67 +123,17 @@ def authorize():
                 if constituent_info_response.status_code == 200:
                     # if it was, parse it as JSON
                     constituent_data = constituent_info_response.json()
+                    # print the response for debugging
+                    print(constituent_data)
                     # then grab the data about the account
                     constituent_account_data = constituent_data['retrieveIndividualAccountResponse']['individualAccount']
                     # try to grab the preferred name, but failing that, get the first name
                     constituent_name = constituent_account_data['primaryContact'].get('preferredName', constituent_account_data['primaryContact'].get('firstName'))
                     # print the name for debugging
                     print(f"name: {constituent_name}")
-                    #######################################################################
-                    # ------------ Get the Points Info for the Constituent-------------- #
-                    # first, construct and make the API call
-                    # comment out the old points_url = f"https://api.neoncrm.com/neonws/services/api/customObjectRecord/listCustomObjectRecords?userSessionId={user_session_id}&objectApiName=Points_c&customObjectOutputFieldList.customObjectOutputField.label=Points Activity&customObjectOutputFieldList.customObjectOutputField.columnName=name&customObjectSearchCriteriaList.customObjectSearchCriteria.criteriaField=Constituent_c&customObjectSearchCriteriaList.customObjectSearchCriteria.operator=EQUAL&customObjectSearchCriteriaList.customObjectSearchCriteria.value={access_token}"
-                    points_url = f"https://api.neoncrm.com/neonws/services/api/customObjectRecord/listCustomObjectRecords?userSessionId={user_session_id}&objectApiName=Points_c&customObjectSearchCriteriaList.customObjectSearchCriteria.criteriaField=Constituent_c&customObjectSearchCriteriaList.customObjectSearchCriteria.operator=EQUAL&customObjectSearchCriteriaList.customObjectSearchCriteria.value={access_token}&customObjectOutputFieldList.customObjectOutputField.label=Points Activity&customObjectOutputFieldList.customObjectOutputField.columnName=name&customObjectOutputFieldList.customObjectOutputField.label=Created on&customObjectOutputFieldList.customObjectOutputField.columnName=createTime&customObjectOutputFieldList.customObjectOutputField.label=type&customObjectOutputFieldList.customObjectOutputField.columnName=type_c&customObjectOutputFieldList.customObjectOutputField.label=subtype&customObjectOutputFieldList.customObjectOutputField.columnName=subtype_c"
-                    points_response = requests.get(points_url)
-                    # print the raw response for debugging
-                    print(points_response)
-                    # then, check to see if points API call was successful
-                    if points_response.status_code == 200:
-                        # if it was, parse it as JSON
-                        points_data = points_response.json()
-                        # print it for debugging
-                        print(points_data)
-                        # Now we'll make a helper function to parse the date from the response records
-                        def parse_date(date_string):
-                            return datetime.strptime(date_string, "%m/%d/%y")
-                        # And then we can extract and transform the points records
-                        events = []
-                        for item in points_data["listCustomObjectRecordsResponse"]["searchResults"]["nameValuePairs"]:
-                            event = {}
-                            for pair in item["nameValuePair"]:
-                                if pair["name"] == "type_c":
-                                    event["type"] = pair["value"]
-                                elif pair["name"] == "subtype_c":
-                                    event["subtype"] = pair["value"]
-                                elif pair["name"] == "createTime":
-                                    event["date"] = datetime.strptime(pair["value"], "%m/%d/%Y %H:%M:%S").strftime("%m/%d/%y")
-                            events.append(event)
-                        # Now we will use our helper function to sort the events list based on the date, in descending order
-                        # (this would be extremely error-prone if we were trying to sort them by the date strings they now have)
-                        events.sort(key=lambda x: parse_date(x["date"]), reverse=True)
-                        # Then we can construct our final dictionary that holds the points total and the array of points records with details
-                        points_dict = {
-                            "points": points_data["listCustomObjectRecordsResponse"]["page"]["totalResults"],
-                            "events": events
-                        }
-                        print(points_dict)
-                    ############ DEPRECATED BY DOUGLAS #####################################
-                    # # then, check to see if points API call was successful
-                    # if points_response.status_code == 200:
-                    #     # if it was, parse it as JSON
-                    #     points_data = points_response.json()
-                    #     print(points_data)
-                    #     total_points = points_data['listCustomObjectRecordsResponse']['page']['totalResults']
-                    #     # and print the response for debugging
-                    #     print(f"Total Points_c objects associated with Constituent ID {access_token}: {total_points}")
-                    ############# END DEPRECATED SECTION ######################################
-                    else:
-                        print("Failed to retrieve any points object records", response.status_code)
-
-                else:
-                    # handle case where API call is not successful
-                    print(f"Could not retrieve account info. Status code: {constituent_info_response.status_code}")
-
+                    # and save the user's name to the session
+                    session['constituent_name'] = constituent_name
+                    ### Deal with the exception later
             else:
                 print("login failed. No user session ID received.")
         else:
@@ -198,12 +151,126 @@ def authorize():
         # if the HTTP request itself to the API failed to connect,
         # we'll admit our problem and print our the status code:
         print('Sadly, could not even connect to the api...', api_response.status_code)
-    #
-    #
-    # ------------------------------------------------------------------------------- #
-    # ----------- and that is the end of the API User Authentication block ---------- #
-    # ------------------------------------------------------------------------------- #
 
+
+    return render_template('check_in.html', logout_url=logout_url, name=constituent_name)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@app.route('/post_checkin', methods=['POST'])
+def post_checkin():
+    selected_group = request.form.get('selected_group')
+    print(selected_group)
+    # First, let's create the new Points record in NeonCRM
+    # we begin by creating our API request
+    # Note ---- we need to double-check that it's okay ------ WE HAVE NOT CODED THAT PART YET
+    user_session_id = session['user_session_id']
+    access_token = session['access_token']
+    # and to include today's date in the name of the record, we'll need to get it
+    today = datetime.today()
+    formatted_date = today.strftime("%m/%d/%y")
+    print(formatted_date)
+    checkin_record_name = f'check-in: {selected_group} - {formatted_date}'
+    # and format the API request
+    checkin_url = f'https://api.neoncrm.com/neonws/services/api/customObjectRecord/createCustomObjectRecord?userSessionId={user_session_id}&customObjectRecord.objectApiName=Points_c&customObjectRecord.customObjectRecordDataList.customObjectRecordData.name=Constituent_c&customObjectRecord.customObjectRecordDataList.customObjectRecordData.value={access_token}&customObjectRecord.customObjectRecordDataList.customObjectRecordData.name=type_c&customObjectRecord.customObjectRecordDataList.customObjectRecordData.value=check-in&customObjectRecord.customObjectRecordDataList.customObjectRecordData.name=subtype_c&customObjectRecord.customObjectRecordDataList.customObjectRecordData.value={selected_group}&customObjectRecord.customObjectRecordDataList.customObjectRecordData.name=name&customObjectRecord.customObjectRecordDataList.customObjectRecordData.value={checkin_record_name}'
+    # and post the request
+    checkin_response = requests.post(checkin_url)
+    #print the raw response for debugging
+    print(checkin_response)
+    # then, check to see if checkin api call was successful
+    if checkin_response.status_code == 200:
+        # if it was, parse it as JSON
+        checkin_data = checkin_response.json()
+        # print it for debugging
+        print(checkin_data)
+    else:
+        print("whoops")
+        ##! Fix this later, add error handling
+
+    #######################################################################
+    # ------------ Get the Points Info for the Constituent-------------- #
+    # first, construct and make the API call
+    user_session_id = session['user_session_id']
+    access_token = session['access_token']
+    points_url = f"https://api.neoncrm.com/neonws/services/api/customObjectRecord/listCustomObjectRecords?userSessionId={user_session_id}&objectApiName=Points_c&customObjectSearchCriteriaList.customObjectSearchCriteria.criteriaField=Constituent_c&customObjectSearchCriteriaList.customObjectSearchCriteria.operator=EQUAL&customObjectSearchCriteriaList.customObjectSearchCriteria.value={access_token}&customObjectOutputFieldList.customObjectOutputField.label=Points Activity&customObjectOutputFieldList.customObjectOutputField.columnName=name&customObjectOutputFieldList.customObjectOutputField.label=Created on&customObjectOutputFieldList.customObjectOutputField.columnName=createTime&customObjectOutputFieldList.customObjectOutputField.label=type&customObjectOutputFieldList.customObjectOutputField.columnName=type_c&customObjectOutputFieldList.customObjectOutputField.label=subtype&customObjectOutputFieldList.customObjectOutputField.columnName=subtype_c&page.pageSize=200"
+    points_response = requests.get(points_url)
+    # print the raw response for debugging
+    print(points_response)
+    # then, check to see if points API call was successful
+    if points_response.status_code == 200:
+        # if it was, parse it as JSON
+        points_data = points_response.json()
+        # print it for debugging
+        print(points_data)
+        # Now we'll make a helper function to parse the date from the response records
+        def parse_date(date_string):
+            return datetime.strptime(date_string, "%m/%d/%y")
+        # And then we can extract and transform the points records
+        events = []
+        for item in points_data["listCustomObjectRecordsResponse"]["searchResults"]["nameValuePairs"]:
+            event = {}
+            for pair in item["nameValuePair"]:
+                if pair["name"] == "type_c":
+                    event["type"] = pair["value"]
+                elif pair["name"] == "subtype_c":
+                    event["subtype"] = pair["value"]
+                elif pair["name"] == "createTime":
+                    event["date"] = datetime.strptime(pair["value"], "%m/%d/%Y %H:%M:%S").strftime("%m/%d/%y")
+            events.append(event)
+            # Now we will use our helper function to sort the events list based on the date, in descending order
+            # (this would be extremely error-prone if we were trying to sort them by the date strings they now have)
+            events.sort(key=lambda x: parse_date(x["date"]), reverse=True)
+            # Then we can construct our final dictionary that holds the points total and the array of points records with details
+            points_dict = {
+                "points": points_data["listCustomObjectRecordsResponse"]["page"]["totalResults"],
+                "events": events
+            }
+            print(points_dict)
+    else:
+        print("Failed to retrieve any points object records", points_response.status_code)
+
+#### Commenting out this useful block because I am in a rush
+# else:
+#     # handle case where API call is not successful
+#     print(f"Could not retrieve account info. Status code: {constituent_info_response.status_code}")
+
+#     else:
+#         print("login failed. No user session ID received.")
+# else:
+#     # if the login was not a success, we will print out our terrible news
+#     print("I am mortified to admit that the api login failed. Maybe someone canceled the atlas user account? The system replied: ", operation_result)
+#     # if there are specific errors provided, we'll print them out too
+#     if 'errors' in login_response:
+#         errors_list = login_response['errors']['error']
+#         for error in errors_list:
+#             error_code = str(error['errorCode'])
+#             error_message = error['errorMessage']
+#             error_description = error_code_descriptions.get(error_code, "No description available.")
+#             print(f"Error code: {error_code}, Message: {error_message}. Description: {error_description}")
+# else:
+# # if the HTTP request itself to the API failed to connect,
+# # we'll admit our problem and print our the status code:
+# print('Sadly, could not even connect to the api...', api_response.status_code)
+# #
+# #
+# ------------------------------------------------------------------------------- #
+# ----------- and that is the end of the API User Authentication block ---------- #
+# ------------------------------------------------------------------------------- #
+
+    constituent_name = session['constituent_name']
 
     return render_template('neon_redirect.html', user=access_token, logout_url=logout_url, name=constituent_name, points_dict=points_dict)
 
