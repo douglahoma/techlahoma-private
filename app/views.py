@@ -42,13 +42,18 @@ def authorize():
             os.getenv("ORG_ID")
         )
     )
+    print("about the print the reponse we got from authenticating as an API user")
     print(api_response.text)
+    print("just printed the reponse we got from authenticating as an API user")
     #
     # Then we can check the content of the response to our request
     if api_response.status_code == 200:
         # if the request itself (Note: distinct from the login attempt!) was
         # successful, we'll parse the response's JSON data
+        print("about the print the json of the reponse we got from authenticating as an API user")
         api_response_data = api_response.json()
+        print(api_response_data)
+        print("just finished printing the json of the reponse we got from authenticating as an API user")
         #
         # before checking to see if the login attempt worked.
         #
@@ -75,7 +80,9 @@ def authorize():
         if operation_result == 'SUCCESS':
             # if the api login WAS a success, we'll grab the userSessionId
             user_session_id = login_response.get('userSessionId')
+            print("about to print the user_session_id we got back")
             print(user_session_id)
+            print("about to print the user_session_id we got back")
             if user_session_id:
                 # and print it out for logging/debugging purposes
                 print('Great news! Login worked. User session ID is: ', user_session_id)
@@ -96,20 +103,23 @@ def authorize():
                     # if it was, parse it as JSON
                     constituent_data = constituent_info_response.json()
                     # print the response for debugging
+                    print("about to print the consituent account data we got back")
                     print(constituent_data)
+                    print("that concludes the printing of the account data")
                     # then grab the data about the account
                     constituent_account_data = constituent_data['retrieveIndividualAccountResponse']['individualAccount']
                     # try to grab the preferred name, but failing that, get the first name
                     constituent_name = constituent_account_data['primaryContact'].get('preferredName', constituent_account_data['primaryContact'].get('firstName'))
                     # print the name for debugging
-                    print(f"name: {constituent_name}")
+                    print(f"the constituent's name (preferred name if included) is: {constituent_name}")
                     # and save the user's name to the session
                     session['constituent_name'] = constituent_name
                     ### Deal with the exception later
                     # Now let's get the points records
-                    print(f"user_session_id is {session['user_session_id']}")
                     points_records = neoncrm.Constituent.retrieve_user_point_records(session['user_session_id'], session['access_token'])
+                    print("now we are about to print the points records for the constituent")
                     print(points_records)
+                    print("and that concludes the points records for the constituent")
                     # print(points_records["listCustomObjectRecordsResponse"]["searchResults"]["nameValuePairs"])
             else:
                 print("login failed. No user session ID received.")
@@ -139,7 +149,9 @@ def authorize():
 @app.route('/post_checkin', methods=['POST'])
 def post_checkin():
     selected_group = request.form.get('selected_group')
+    print("about to print the group they selected")
     print(selected_group)
+    print("that was the group they selected")
     # First, let's create the new Points record in NeonCRM
     # we begin by creating our API request
     # Note ---- we need to double-check that it's okay ------ WE HAVE NOT CODED THAT PART YET
@@ -148,20 +160,25 @@ def post_checkin():
     # and to include today's date in the name of the record, we'll need to get it
     today = datetime.today()
     formatted_date = today.strftime("%m/%d/%y")
-    print(formatted_date)
+    print(f"about to make a checkin record for {formatted_date}")
     checkin_record_name = f'check-in: {selected_group} - {formatted_date}'
+    print(f"we will call the record {checkin_record_name}")
     # and format the API request
-    checkin_url = f'https://api.neoncrm.com/neonws/services/api/customObjectRecord/createCustomObjectRecord?userSessionId={user_session_id}&customObjectRecord.objectApiName=Points_c&customObjectRecord.customObjectRecordDataList.customObjectRecordData.name=Constituent_c&customObjectRecord.customObjectRecordDataList.customObjectRecordData.value={access_token}&customObjectRecord.customObjectRecordDataList.customObjectRecordData.name=type_c&customObjectRecord.customObjectRecordDataList.customObjectRecordData.value=check-in&customObjectRecord.customObjectRecordDataList.customObjectRecordData.name=subtype_c&customObjectRecord.customObjectRecordDataList.customObjectRecordData.value={selected_group}&customObjectRecord.customObjectRecordDataList.customObjectRecordData.name=name&customObjectRecord.customObjectRecordDataList.customObjectRecordData.value={checkin_record_name}'
+    checkin_url = f'https://api.neoncrm.com/neonws/services/api/customObjectRecord/createCustomObjectRecord?userSessionId={user_session_id}&customObjectRecord.objectApiName=Points_c&customObjectRecord.customObjectRecordDataList.customObjectRecordData.name=Constituent_c&customObjectRecord.customObjectRecordDataList.customObjectRecordData.value={access_token}&customObjectRecord.customObjectRecordDataList.customObjectRecordData.name=type_for_api_c&customObjectRecord.customObjectRecordDataList.customObjectRecordData.value=check-in&customObjectRecord.customObjectRecordDataList.customObjectRecordData.name=subtype_for_api_c&customObjectRecord.customObjectRecordDataList.customObjectRecordData.value={selected_group}&customObjectRecord.customObjectRecordDataList.customObjectRecordData.name=name&customObjectRecord.customObjectRecordDataList.customObjectRecordData.value={checkin_record_name}'
     # and post the request
     checkin_response = requests.post(checkin_url)
     #print the raw response for debugging
+    print("just submitted the post request to check in to the event. About to print the response code.")
     print(checkin_response)
+    print("that was the response code")
     # then, check to see if checkin api call was successful
     if checkin_response.status_code == 200:
         # if it was, parse it as JSON
         checkin_data = checkin_response.json()
         # print it for debugging
+        print("about to print the json of the reponse we got back")
         print(checkin_data)
+        print("that was the json of the reponse we got back")
     else:
         print("whoops")
         ##! Fix this later, add error handling
@@ -171,40 +188,52 @@ def post_checkin():
     # first, construct and make the API call
     user_session_id = session['user_session_id']
     access_token = session['access_token']
-    points_url = f"https://api.neoncrm.com/neonws/services/api/customObjectRecord/listCustomObjectRecords?userSessionId={user_session_id}&objectApiName=Points_c&customObjectSearchCriteriaList.customObjectSearchCriteria.criteriaField=Constituent_c&customObjectSearchCriteriaList.customObjectSearchCriteria.operator=EQUAL&customObjectSearchCriteriaList.customObjectSearchCriteria.value={access_token}&customObjectOutputFieldList.customObjectOutputField.label=Points Activity&customObjectOutputFieldList.customObjectOutputField.columnName=name&customObjectOutputFieldList.customObjectOutputField.label=Created on&customObjectOutputFieldList.customObjectOutputField.columnName=createTime&customObjectOutputFieldList.customObjectOutputField.label=type&customObjectOutputFieldList.customObjectOutputField.columnName=type_c&customObjectOutputFieldList.customObjectOutputField.label=subtype&customObjectOutputFieldList.customObjectOutputField.columnName=subtype_c&page.pageSize=200"
-    points_response = requests.get(points_url)
+    points_response = requests.get(neoncrm.API.POINTS_URL.format(session["user_session_id"], session["access_token"]))
     # print the raw response for debugging
+    print("about to print the reponse when getting the points for the constituent")
     print(points_response)
+    print("just finished printing the reponse we got when getting the points for the constituent")
     # then, check to see if points API call was successful
     if points_response.status_code == 200:
         # if it was, parse it as JSON
         points_data = points_response.json()
         # print it for debugging
+        print("about to print the json of the points response")
         print(points_data)
+        print("just printed the json of the points response")
         # Now we'll make a helper function to parse the date from the response records
         def parse_date(date_string):
             return datetime.strptime(date_string, "%m/%d/%y")
         # And then we can extract and transform the points records
+        points_dict = {}
         events = []
         for item in points_data["listCustomObjectRecordsResponse"]["searchResults"]["nameValuePairs"]:
             event = {}
             for pair in item["nameValuePair"]:
-                if pair["name"] == "type_c":
+                if pair["name"] == "point_type_c":
                     event["type"] = pair["value"]
-                elif pair["name"] == "subtype_c":
+                elif pair["name"] == "point_subtype_c":
                     event["subtype"] = pair["value"]
+                elif pair["name"] == "Points_Awarded_c":
+                    event["awarded"] = int((pair["value"]))
                 elif pair["name"] == "createTime":
                     event["date"] = datetime.strptime(pair["value"], "%m/%d/%Y %H:%M:%S").strftime("%m/%d/%y")
             events.append(event)
-            # Now we will use our helper function to sort the events list based on the date, in descending order
-            # (this would be extremely error-prone if we were trying to sort them by the date strings they now have)
-            events.sort(key=lambda x: parse_date(x["date"]), reverse=True)
-            # Then we can construct our final dictionary that holds the points total and the array of points records with details
-            points_dict = {
-                "points": points_data["listCustomObjectRecordsResponse"]["page"]["totalResults"],
-                "events": events
-            }
-            print(points_dict)
+        # Now we will use our helper function to sort the events list based on the date, in descending order
+        # (this would be extremely error-prone if we were trying to sort them by the date strings they now have)
+        events.sort(key=lambda x: parse_date(x["date"]), reverse=True)
+        # Then we can construct our final dictionary that holds the points total and the array of points records with details
+        total_points = 0
+        for item in events:
+            total_points += item['awarded']
+        print(total_points)
+        points_dict = {
+            "points": total_points,
+            "events": events
+        }
+        print("now about to print the points dict")
+        print(points_dict)
+        print("thus ends the points dict")
     else:
         print("Failed to retrieve any points object records", points_response.status_code)
 
@@ -238,7 +267,7 @@ def post_checkin():
 
     constituent_name = session['constituent_name']
 
-    return render_template('neon_redirect.html', user=access_token, logout_url=logout_url, name=constituent_name, points_dict=points_dict)
+    return render_template('neon_redirect.html', user=session["access_token"], logout_url=logout_url, name=constituent_name, points_dict=points_dict)
 
 # @app.route('/neon_redirect')
 # def neon_redirect(user_id):
