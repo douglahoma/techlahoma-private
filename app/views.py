@@ -139,7 +139,6 @@ def authorize():
         # we'll admit our problem and print our the status code:
         print('Sadly, could not even connect to the api...', api_response.status_code)
 
-
     return render_template(
         'check_in.html',
         logout_url=os.getenv("LOGOUT_URL"),
@@ -148,6 +147,8 @@ def authorize():
 
 @app.route('/post_checkin', methods=['POST'])
 def post_checkin():
+    incentives_list_of_tuples = neoncrm.Constituent.get_incentives(session["user_session_id"])
+    print (incentives_list_of_tuples)
     selected_group = request.form.get('selected_group')
     print("about to print the group they selected")
     print(selected_group)
@@ -191,10 +192,6 @@ def post_checkin():
     constituent_name = session['constituent_name']
 
     return render_template('neon_redirect.html', user=session["access_token"], logout_url=logout_url, name=constituent_name, points_dict=points_dict)
-
-# @app.route('/neon_redirect')
-# def neon_redirect(user_id):
-#     return render_template('neon_redirect.html', logout_url=logout_url)
 
 
 # Error Page

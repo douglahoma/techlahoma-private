@@ -25,6 +25,8 @@ class API:
     ACCESS_TOKEN_URL = 'https://app.neoncrm.com/np/oauth/token'
     API_LOGIN_URL = "https://api.neoncrm.com/neonws/services/api/common/login?login.apiKey={}&login.orgid={}"
     CONSTITUENT_INFO_URL = "https://api.neoncrm.com/neonws/services/api/account/retrieveIndividualAccount?userSessionId={}&accountId={}"
+    # incentives url takes user_session_id
+    INCENTIVES_URL = "https://api.neoncrm.com/neonws/services/api/customObjectRecord/listCustomObjectRecords?userSessionId={}&objectApiName=Incentives_c&customObjectOutputFieldList.customObjectOutputField.label=Incentive&customObjectOutputFieldList.customObjectOutputField.columnName=name&customObjectOutputFieldList.customObjectOutputField.label=Points Needed&customObjectOutputFieldList.customObjectOutputField.columnName=Points_Needed_c"
     POINTS_URL = "https://api.neoncrm.com/neonws/services/api/customObjectRecord/listCustomObjectRecords?userSessionId={}&objectApiName=Points_c&customObjectSearchCriteriaList.customObjectSearchCriteria.criteriaField=Constituent_c&customObjectSearchCriteriaList.customObjectSearchCriteria.operator=EQUAL&customObjectSearchCriteriaList.customObjectSearchCriteria.value={}&customObjectOutputFieldList.customObjectOutputField.label=Points Activity&customObjectOutputFieldList.customObjectOutputField.columnName=name&customObjectOutputFieldList.customObjectOutputField.label=Created on&customObjectOutputFieldList.customObjectOutputField.columnName=createTime&customObjectOutputFieldList.customObjectOutputField.label=point_type&customObjectOutputFieldList.customObjectOutputField.columnName=point_type_c&customObjectOutputFieldList.customObjectOutputField.label=point_subtype&customObjectOutputFieldList.customObjectOutputField.columnName=point_subtype_c&customObjectOutputFieldList.customObjectOutputField.label=Points Awarded&customObjectOutputFieldList.customObjectOutputField.columnName=Points_Awarded_c&page.pageSize=200"
     # event checkin url requires these arguments: user_session_id, access_token, selected_group, checkin_record_name
     EVENT_CHECKIN_URL = "https://api.neoncrm.com/neonws/services/api/customObjectRecord/createCustomObjectRecord?userSessionId={}&customObjectRecord.objectApiName=Points_c&customObjectRecord.customObjectRecordDataList.customObjectRecordData.name=Constituent_c&customObjectRecord.customObjectRecordDataList.customObjectRecordData.value={}&customObjectRecord.customObjectRecordDataList.customObjectRecordData.name=type_for_api_c&customObjectRecord.customObjectRecordDataList.customObjectRecordData.value=check-in&customObjectRecord.customObjectRecordDataList.customObjectRecordData.name=subtype_for_api_c&customObjectRecord.customObjectRecordDataList.customObjectRecordData.value={}&customObjectRecord.customObjectRecordDataList.customObjectRecordData.name=name&customObjectRecord.customObjectRecordDataList.customObjectRecordData.value={}"
@@ -114,6 +116,22 @@ class Constituent:
         """
         print(API.POINTS_URL.format(user_session_id, access_token))
         return requests.get(API.POINTS_URL.format(user_session_id, access_token)).json()
+
+    @classmethod
+    def get_incentives(cls, user_session_id):
+        incentives_response = requests.get(API.INCENTIVES_URL.format(user_session_id)).json()
+        incentives_list = []
+        for item in incentives_response["listCustomObjectRecordsResponse"]["searchResults"]["nameValuePairs"]:
+            points_needed = 0
+            name = ""
+            for pair in item["nameValuePair"]:
+                if pair["name"] == "Points_Needed_c":
+                    points_needed = int(pair["value"])
+                elif pair["name"] == "name":
+                    name = pair["value"]
+            incentives_list.append((points_needed, name))
+        print(incentives_list)
+        return (incentives_list)
 
     @classmethod
     def retrieve_user_point_records_dictionary(cls, user_session_id, access_token):
