@@ -135,6 +135,7 @@ class Constituent:
                     name = pair["value"]
             incentives_list.append((points_needed, name))
         print(incentives_list)
+        session['list_of_incentives'] = incentives_list
         return (incentives_list)
 
     @classmethod
