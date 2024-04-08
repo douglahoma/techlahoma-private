@@ -28,7 +28,6 @@ def landing():
 @app.route('/authorize')
 def authorize():
 
-    print(type(request.args.get('code')))
     neoncrm.API.get_session_access(request.args.get('code'))
 
     # ---------------- API User Authentication --------------------------
