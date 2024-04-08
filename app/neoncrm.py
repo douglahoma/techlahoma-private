@@ -10,6 +10,7 @@ breadcrums leading us back to where it's defined in the source code.
 
 import os
 import requests
+import random
 from datetime import datetime
 
 from flask import session
@@ -149,6 +150,9 @@ class Constituent:
                 return datetime.strptime(date_string, "%m/%d/%y")
             points_dict = {}
             events = []
+            possible_data_updates = ['linkedin', 'employment', 'cell', 'profile']
+            eligible_for_checkin = True
+            eligible_for_data_update = True
             for item in points_data["listCustomObjectRecordsResponse"]["searchResults"]["nameValuePairs"]:
                 event = {}
                 for pair in item["nameValuePair"]:
@@ -163,10 +167,23 @@ class Constituent:
                 events.append(event)
             # Now we will use our helper function to sort the events list based on the date, in descending order
             events.sort(key=lambda x: parse_date(x["date"]), reverse=True)
+            # We'll grab a formatted date of today to check for multiple check-ins
+            today_date = datetime.now().strftime("%m/%d/%y")
             # Then we can construct our final dictionary that holds the points total and the array of points records
             total_points = 0
             for item in events:
+                # add the point to the constituent's points earned total
                 total_points += item['awarded']
+                # and if it is a data update, remove it from the ones they are eligible for
+                if event['subtype'] in possible_data_updates:
+                    possible_data_updates.remove(event['subtype'])
+                # and we'll check the date against today to remove the possibility for double check-ins
+                if event['date'] == today_date:
+                    # if we find it, we'll flip the appropriate switch:
+                    if event['type'] == 'check-in':
+                        eligible_for_checkin = False
+                    elif event['type'] == 'data-update':
+                        eligible_for_data_update = False
             points_dict = {
                 "points": total_points,
                 "events": events
@@ -192,6 +209,20 @@ class Constituent:
             points_dict['earned_rewards'] = earned_rewards
             points_dict['next_closest_reward'] = next_closest_reward
             points_dict['points_to_next_reward'] = points_to_next_reward
+            next_data_update = ""
+            if possible_data_updates:
+                # if any possible data updates haven't been done, pick the next one at random
+                next_data_update = random.choice(possible_data_updates)
+            next_data_update_points_value = None
+            if next_data_update:
+                    if next_data_update == 'cell' or next_data_update == 'profile':
+                        next_data_update_points_value = 10
+                    else:
+                        next_data_update_points_value = 5
+            points_dict['next_data_update'] = next_data_update
+            points_dict['next_data_update_points_value'] = next_data_update_points_value
+            points_dict['eligible_for_checkin'] = eligible_for_checkin
+            points_dict['eligible_for_data_update'] = eligible_for_data_update
             print("about to print the points dict")
             print(points_dict)
             print("just printed the points dict")
