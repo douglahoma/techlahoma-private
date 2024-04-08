@@ -19,7 +19,7 @@ load_dotenv()
 
 class API:
     """INTERFACE CLASS REPRESENTING NEONCRM AND HOW WE INTERACT WITH IT"""
-
+    BASE_URL = "https://api.neoncrm.com"
     LOGIN_URL = "https://{}.app.neoncrm.com/np/oauth/auth?response_type=code&client_id={}&redirect_uri={}"
     ACCESS_TOKEN_URL = 'https://app.neoncrm.com/np/oauth/token'
     API_LOGIN_URL = "https://api.neoncrm.com/neonws/services/api/common/login?login.apiKey={}&login.orgid={}"
@@ -34,23 +34,19 @@ class API:
     }
 
     @classmethod
-    def get_session_access(cls, authorization) -> None:
-        """SENDS HTTP REQUEST USING AUTHORIZATION CODE TO GET access token representing constituent Account id."""
-        request_payload = {
-            'client_id': os.getenv("CLIENT_ID"),
-            'client_secret': os.getenv("CLIENT_SECRET"),
-            'redirect_uri': os.getenv("REDIRECT_URI"),
-            'code': authorization,
-            'grant_type': 'authorization_code'
-        }
-        request_headers = {'Content-Type': 'application/x-www-form-urlencoded'}
-
-        response = requests.post(
-            cls.ACCESS_TOKEN_URL,
-            data=request_payload,
-            headers=request_headers
-        )
-        session['access_token'] = (response.json().get('access_token'))
+    def perform_query(cls, url: str, method: function, **kwargs):
+        """Perform a query to the NeonCRM API --
+        
+        Routing all of our interactions with the API through here allows us
+        to streamline how we handle errors, exceptions, and even connection
+        problems. The use of keyworld arguments will be critical in making sure
+        all of this can happen in one function where we can pass all of the
+        relevant parameters here:
+        1. URL/I of whatever we're trying to use
+        2. requests method we need to use, get, put, etc.
+        3. The other arguments we need to feed into the method.
+        """
+        pass
 
     @classmethod
     def get_consituent_info(cls):
@@ -103,6 +99,76 @@ class API:
         )
 
 class Constituent:
+    """Object model representing a single Constituent in the NeonCRM system:
+
+    1. Much of what we're doing is handled quite nicely by treating certain
+    data as managed attributes of this Constituent object. The thing about
+    the userSessionId expiring every ten minutes is pretty much the EXACT thing
+    that getter methods were invented for in OOP.
+    https://realpython.com/python-property/
+
+    2. 80-90% of the overall meat of the seperate neoncrm module will ultimately
+    need to end up bound in this class, as either class attributes or instance
+    attributes. BY NO MEANS EVERTHING THOUGH!--which I explain above. There are
+    still things where we are dealing with the API itself and not the data for
+    this or that Constituent or even Constituents, per se, which is how you tell
+    it goes in this class instead of that one.
+    """
+    def __init__(self):
+        self._account_id = ""
+        self._usid = {}
+        self._info = {}
+        self._points_records = {}
+
+    @property
+    def account_id(self):
+        """Returns the value of the account_id property as string"""
+        return self._account_id
+
+    @account_id.setter
+    def account_id(self, authorization: str):
+        """SENDS HTTP REQUEST USING AUTHORIZATION CODE TO GET access token representing constituent Account id."""
+        request_payload = {
+            'client_id': os.getenv("CLIENT_ID"),
+            'client_secret': os.getenv("CLIENT_SECRET"),
+            'redirect_uri': os.getenv("REDIRECT_URI"),
+            'code': authorization,
+            'grant_type': 'authorization_code'
+        }
+        request_headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+
+        response = requests.post(
+            API.ACCESS_TOKEN_URL,
+            data=request_payload,
+            headers=request_headers
+        )
+        self._account_id = (
+            response.json().get('access_token')
+        )
+
+    @property
+    def usid(self):
+        """We can handle storage of the 'userSessionId' through a little bit
+        of tomfoolery --
+        
+        1. Because we're going to need to access the information contained in
+        the value of responseDateTime later in order to perform the check to
+        see if our userSessionId has expired. Just store it in a dictionary!
+        2. Eventually this method will need to perform the check to see if the
+        usid has expired, if so, renew the login.
+        3. At the time of writing I am only 85-90% sure this will work exactly
+        as I'm describing but there is no good reason not to at leas try it and
+        see what happens.
+        """
+        return self._usid.get('userSessionId')
+    
+    @usid.setter
+    def usid(self, authorization: str):
+        """Code corresponding to roughly lines 65-115 in the version of app.py
+        that's currently in the repo in the 'old' directory. How exactly this
+        will work is not super duper certain ATM, though -- ideally this is
+        supposed to be a read-only perorty outside of the class"""
+        self._usid = authorization
 
     @classmethod
     def retrieve_user_point_records(cls, user_session_id, access_token):
