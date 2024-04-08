@@ -188,54 +188,55 @@ def post_checkin():
     # first, construct and make the API call
     user_session_id = session['user_session_id']
     access_token = session['access_token']
-    points_response = requests.get(neoncrm.API.POINTS_URL.format(session["user_session_id"], session["access_token"]))
-    # print the raw response for debugging
-    print("about to print the reponse when getting the points for the constituent")
-    print(points_response)
-    print("just finished printing the reponse we got when getting the points for the constituent")
-    # then, check to see if points API call was successful
-    if points_response.status_code == 200:
-        # if it was, parse it as JSON
-        points_data = points_response.json()
-        # print it for debugging
-        print("about to print the json of the points response")
-        print(points_data)
-        print("just printed the json of the points response")
-        # Now we'll make a helper function to parse the date from the response records
-        def parse_date(date_string):
-            return datetime.strptime(date_string, "%m/%d/%y")
-        # And then we can extract and transform the points records
-        points_dict = {}
-        events = []
-        for item in points_data["listCustomObjectRecordsResponse"]["searchResults"]["nameValuePairs"]:
-            event = {}
-            for pair in item["nameValuePair"]:
-                if pair["name"] == "point_type_c":
-                    event["type"] = pair["value"]
-                elif pair["name"] == "point_subtype_c":
-                    event["subtype"] = pair["value"]
-                elif pair["name"] == "Points_Awarded_c":
-                    event["awarded"] = int((pair["value"]))
-                elif pair["name"] == "createTime":
-                    event["date"] = datetime.strptime(pair["value"], "%m/%d/%Y %H:%M:%S").strftime("%m/%d/%y")
-            events.append(event)
-        # Now we will use our helper function to sort the events list based on the date, in descending order
-        # (this would be extremely error-prone if we were trying to sort them by the date strings they now have)
-        events.sort(key=lambda x: parse_date(x["date"]), reverse=True)
-        # Then we can construct our final dictionary that holds the points total and the array of points records with details
-        total_points = 0
-        for item in events:
-            total_points += item['awarded']
-        print(total_points)
-        points_dict = {
-            "points": total_points,
-            "events": events
-        }
-        print("now about to print the points dict")
-        print(points_dict)
-        print("thus ends the points dict")
-    else:
-        print("Failed to retrieve any points object records", points_response.status_code)
+    points_dict = neoncrm.Constituent.retrieve_user_point_records_dictionary(user_session_id, access_token)
+    # points_response = requests.get(neoncrm.API.POINTS_URL.format(session["user_session_id"], session["access_token"]))
+    # # print the raw response for debugging
+    # print("about to print the reponse when getting the points for the constituent")
+    # print(points_response)
+    # print("just finished printing the reponse we got when getting the points for the constituent")
+    # # then, check to see if points API call was successful
+    # if points_response.status_code == 200:
+    #     # if it was, parse it as JSON
+    #     points_data = points_response.json()
+    #     # print it for debugging
+    #     print("about to print the json of the points response")
+    #     print(points_data)
+    #     print("just printed the json of the points response")
+    #     # Now we'll make a helper function to parse the date from the response records
+    #     def parse_date(date_string):
+    #         return datetime.strptime(date_string, "%m/%d/%y")
+    #     # And then we can extract and transform the points records
+    #     points_dict = {}
+    #     events = []
+    #     for item in points_data["listCustomObjectRecordsResponse"]["searchResults"]["nameValuePairs"]:
+    #         event = {}
+    #         for pair in item["nameValuePair"]:
+    #             if pair["name"] == "point_type_c":
+    #                 event["type"] = pair["value"]
+    #             elif pair["name"] == "point_subtype_c":
+    #                 event["subtype"] = pair["value"]
+    #             elif pair["name"] == "Points_Awarded_c":
+    #                 event["awarded"] = int((pair["value"]))
+    #             elif pair["name"] == "createTime":
+    #                 event["date"] = datetime.strptime(pair["value"], "%m/%d/%Y %H:%M:%S").strftime("%m/%d/%y")
+    #         events.append(event)
+    #     # Now we will use our helper function to sort the events list based on the date, in descending order
+    #     # (this would be extremely error-prone if we were trying to sort them by the date strings they now have)
+    #     events.sort(key=lambda x: parse_date(x["date"]), reverse=True)
+    #     # Then we can construct our final dictionary that holds the points total and the array of points records with details
+    #     total_points = 0
+    #     for item in events:
+    #         total_points += item['awarded']
+    #     print(total_points)
+    #     points_dict = {
+    #         "points": total_points,
+    #         "events": events
+    #     }
+    #     print("now about to print the points dict")
+    #     print(points_dict)
+    #     print("thus ends the points dict")
+    # else:
+    #     print("Failed to retrieve any points object records", points_response.status_code)
 
 #### Commenting out this useful block because I am in a rush
 # else:
