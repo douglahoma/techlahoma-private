@@ -1,0 +1,26 @@
+The two most imporant things to think about when trying to make code
+modular:
+
+1. Related data and logic needs to all live together, in the same file,
+module, or class.
+2. Functions/methods need to do EXACTLY ONE AND ONLY ONE thing.
+
+The easiest way to do this in Python is through the use of namespaces.
+It gives you two ways of doing thing: the module, a particular file, 
+'whatever.py' or a class. Classes can be just a box of related things to
+put stuff in and don't necessarily have to be a blueprint of how to build
+and use a particular type of thing.
+
+In this particular project we are trying to seperate out the logic into two
+main namespaces:
+
+1. 'views.py' -- which is where the url routes get defined and
+bound to app for Flask. Ideally that's the only thing that should be going on
+with any of the functions that are defined in this file.
+2. 'neoncrm.py' -- this won't end up being EVERYTHING else but it will get
+close to it. This is where our interactions with neoncrm and the data we get
+from it is process. It will have a class called API, which is where all of our
+interactions with the API are routed through. It's also (probably) going to end
+up having two other classes called Constituent and PointsRecord which will
+may or may not end up working like 'normal' classes the way they explained them
+back in.

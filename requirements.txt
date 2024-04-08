@@ -1,0 +1,6 @@
+Flask==3.0.2
+Flask-Session==0.8.0
+redis==5.0.3
+Werkzeug==3.0.2
+requests==2.25.1
+python-dotenv==1.0.1

@@ -1,0 +1,161 @@
+// Requesting all the Points items for a user:
+
+https://api.neoncrm.com/neonws/services/api/customObjectRecord/listCustomObjectRecords?userSessionId{userSessionId}fb571bdff4adb31a36475b5f8af6c386&objectApiName=Points_c&customObjectSearchCriteriaList.customObjectSearchCriteria.criteriaField=Constituent_c&customObjectSearchCriteriaList.customObjectSearchCriteria.operator=EQUAL&customObjectSearchCriteriaList.customObjectSearchCriteria.value={{access_token}}&customObjectOutputFieldList.customObjectOutputField.label=Points Activity&customObjectOutputFieldList.customObjectOutputField.columnName=name&customObjectOutputFieldList.customObjectOutputField.label=Created on&customObjectOutputFieldList.customObjectOutputField.columnName=createTime&customObjectOutputFieldList.customObjectOutputField.label=point_type&customObjectOutputFieldList.customObjectOutputField.columnName=point_type_c&customObjectOutputFieldList.customObjectOutputField.label=point_subtype&customObjectOutputFieldList.customObjectOutputField.columnName=point_subtype_c&customObjectOutputFieldList.customObjectOutputField.label=Points Awarded&customObjectOutputFieldList.customObjectOutputField.columnName=Points_Awarded_c&page.pageSize=200
+
+
+{
+    "listCustomObjectRecordsResponse": {
+        "operationResult": "SUCCESS",
+        "responseDateTime": "2024-04-07T19:12:53.209-05:00",
+        "page": {
+            "currentPage": 1,
+            "pageSize": 200,
+            "totalPage": 1,
+            "totalResults": 5
+        },
+        "searchResults": {
+            "nameValuePairs": [
+                {
+                    "nameValuePair": [
+                        {
+                            "name": "id",
+                            "value": "1"
+                        },
+                        {
+                            "name": "name",
+                            "value": "check-in: Tulsa Web Devs - 3/27/24"
+                        },
+                        {
+                            "name": "createTime",
+                            "value": "03/27/2024 14:22:09"
+                        },
+                        {
+                            "name": "point_type_c",
+                            "value": "check-in"
+                        },
+                        {
+                            "name": "point_subtype_c",
+                            "value": "Tulsa Web Devs"
+                        },
+                        {
+                            "name": "Points_Awarded_c",
+                            "value": "10"
+                        }
+                    ]
+                },
+                {
+                    "nameValuePair": [
+                        {
+                            "name": "id",
+                            "value": "14"
+                        },
+                        {
+                            "name": "name",
+                            "value": "check-in: Tulsa Game Developers - 4/2/24"
+                        },
+                        {
+                            "name": "createTime",
+                            "value": "04/02/2024 13:54:08"
+                        },
+                        {
+                            "name": "point_type_c",
+                            "value": "check-in"
+                        },
+                        {
+                            "name": "point_subtype_c",
+                            "value": "Tulsa Game Developers"
+                        },
+                        {
+                            "name": "Points_Awarded_c",
+                            "value": "10"
+                        }
+                    ]
+                },
+                {
+                    "nameValuePair": [
+                        {
+                            "name": "id",
+                            "value": "50"
+                        },
+                        {
+                            "name": "name",
+                            "value": "web-created web dev"
+                        },
+                        {
+                            "name": "createTime",
+                            "value": "04/05/2024 11:01:34"
+                        },
+                        {
+                            "name": "point_type_c",
+                            "value": "check-in"
+                        },
+                        {
+                            "name": "point_subtype_c",
+                            "value": "Tulsa Web Devs"
+                        },
+                        {
+                            "name": "Points_Awarded_c",
+                            "value": "10"
+                        }
+                    ]
+                },
+                {
+                    "nameValuePair": [
+                        {
+                            "name": "id",
+                            "value": "57"
+                        },
+                        {
+                            "name": "name",
+                            "value": "data update: cell - 4/7/24"
+                        },
+                        {
+                            "name": "createTime",
+                            "value": "04/07/2024 12:09:39"
+                        },
+                        {
+                            "name": "point_type_c",
+                            "value": "data update"
+                        },
+                        {
+                            "name": "point_subtype_c",
+                            "value": "cell"
+                        },
+                        {
+                            "name": "Points_Awarded_c",
+                            "value": "10"
+                        }
+                    ]
+                },
+                {
+                    "nameValuePair": [
+                        {
+                            "name": "id",
+                            "value": "58"
+                        },
+                        {
+                            "name": "name",
+                            "value": "data update: employment - 4/7/24 "
+                        },
+                        {
+                            "name": "createTime",
+                            "value": "04/07/2024 12:11:53"
+                        },
+                        {
+                            "name": "point_type_c",
+                            "value": "data update"
+                        },
+                        {
+                            "name": "point_subtype_c",
+                            "value": "employment"
+                        },
+                        {
+                            "name": "Points_Awarded_c",
+                            "value": "5"
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
