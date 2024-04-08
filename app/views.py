@@ -163,10 +163,8 @@ def post_checkin():
     print(f"about to make a checkin record for {formatted_date}")
     checkin_record_name = f'check-in: {selected_group} - {formatted_date}'
     print(f"we will call the record {checkin_record_name}")
-    # and format the API request
-    checkin_url = f'https://api.neoncrm.com/neonws/services/api/customObjectRecord/createCustomObjectRecord?userSessionId={user_session_id}&customObjectRecord.objectApiName=Points_c&customObjectRecord.customObjectRecordDataList.customObjectRecordData.name=Constituent_c&customObjectRecord.customObjectRecordDataList.customObjectRecordData.value={access_token}&customObjectRecord.customObjectRecordDataList.customObjectRecordData.name=type_for_api_c&customObjectRecord.customObjectRecordDataList.customObjectRecordData.value=check-in&customObjectRecord.customObjectRecordDataList.customObjectRecordData.name=subtype_for_api_c&customObjectRecord.customObjectRecordDataList.customObjectRecordData.value={selected_group}&customObjectRecord.customObjectRecordDataList.customObjectRecordData.name=name&customObjectRecord.customObjectRecordDataList.customObjectRecordData.value={checkin_record_name}'
-    # and post the request
-    checkin_response = requests.post(checkin_url)
+    # and format and send the API request
+    checkin_response = requests.post(neoncrm.API.EVENT_CHECKIN_URL.format(user_session_id, access_token, selected_group, checkin_record_name))
     #print the raw response for debugging
     print("just submitted the post request to check in to the event. About to print the response code.")
     print(checkin_response)
@@ -189,8 +187,6 @@ def post_checkin():
     user_session_id = session['user_session_id']
     access_token = session['access_token']
     points_dict = neoncrm.Constituent.retrieve_user_point_records_dictionary(user_session_id, access_token)
-
-
 
     constituent_name = session['constituent_name']
 
