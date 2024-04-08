@@ -201,11 +201,13 @@ def post_checkin():
 
 
     constituent_name = session['constituent_name']
+    all_incentives_as_a_list_of_tuples_with_points_value_and_name = session['list_of_incentives']
     logout_url=os.getenv("LOGOUT_URL")
 
     return render_template(
         'neon_redirect.html',
         user=session["access_token"],
+        all_incentives_as_a_list_of_tuples_with_points_value_and_name = all_incentives_as_a_list_of_tuples_with_points_value_and_name,
         logout_url=logout_url,
         name=constituent_name,
         points_total = points_dict['points'],
