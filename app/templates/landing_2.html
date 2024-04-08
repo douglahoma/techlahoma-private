@@ -1,13 +1,9 @@
 {% extends "base.html" %}
 {% block title %} Check In {% endblock %}
-{% block header %}
-<img class="header-img" src="{{url_for('static', filename='techlahoma_bson_white.svg')}}" alt="">
-<img class="header-img" src="{{url_for('static', filename='techlahoma_text_white.png')}}" alt="">
-{% endblock %}
 {% block content %}
 <main>
     <div class="cont">
-        <a class="button-primary" href="{{login_url}}" style="text-decoration:none" >Log in With NeonCRM</a>
+        <a class="primary-button" href="{{login_url}}" style="text-decoration:none" >Log in With NeonCRM</a>
     </div>
     <div class="poly-wrapper">
         <div class="polygon"></div>

@@ -1,0 +1,166 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+body {
+    background-color: #363636;
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    color: white;
+}
+
+header {
+    display: flex;
+    flex-direction: row;
+    /* margin-bottom: 50px; */
+    margin: 24px;
+
+}
+#header-img {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    width: 100%;
+}
+header img, .header-img {
+    display: block;
+    max-height: 100px;
+}
+
+#bson_logo {
+    width: 71px;
+
+}
+#techlahoma_logo {
+    width: 117px;
+    padding: 0px 25px;
+}
+
+.button-primary {
+    background-color: #F8C702;
+    color: #000000;
+    font-size: 16px;
+    border-radius: 50px;
+    padding: 12px 24px;
+    width: fit-content;
+    height: fit-content;
+}
+a {
+    text-decoration: none;
+}
+
+
+/* Nav Menu */
+
+.topnav {
+    overflow: hidden;
+    background-color: #363636;
+    display: block;
+    position: relative;
+    float: right;
+    height: 100%;
+    width: 100%;
+
+}
+/* Hide the links inside the navigation menu (except for logo/home) */
+.topnav #myLinks {
+    display: none;
+  }
+/* Style navigation menu links */
+.topnav a {
+    color: white;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+    display: block;
+  }
+  /* Style the hamburger menu */
+.topnav a.icon {
+    background: #363636;
+    display: block;
+    position: relative;
+    width: 20px;
+    height: 20px;
+    float: right;
+  }
+
+  /* Add a grey background color on mouse-over */
+.topnav a:hover {
+    background-color: #ddd;
+    color: black;
+  }
+  
+  /* Style the active link (or home/logo) */
+  .active {
+    background-color: #04AA6D;
+    color: white;
+  }
+
+
+  /* User Dashboard */
+  main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 30px
+  }
+
+  /* successfully checked in */
+  h2 {
+    font-size: 18px;
+    font-weight: 400;
+  }
+  #points span {
+    font-size: 24px;
+  }
+  #points #rewards-total {
+    font-size: 14px;
+  }
+
+  .container {
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  /* User Dashboard Data Visualization */
+  .vis-container {
+    width: 160px;
+    height: 160px;
+    position: relative;
+    /* margin-bottom: 200px; */
+    overflow: visible;
+  }
+
+  .vis {
+    width: 160px;
+    height: 160px;
+    /* background-color: red; */
+    border: 16px rgba(248,199,2,0.5) solid;
+    border-radius: 50%;
+    box-sizing: border-box;   
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* position: relative; */
+  }
+
+  circle {
+    fill: none;
+    stroke: #F8C702;
+    stroke-width: 17px;
+    stroke-dasharray: 450;
+    stroke-dashoffset: 150;
+    stroke-linecap: round;
+    transform: rotate(-90deg);
+    transform-origin: 50% 50%;
+    /* border-radius: 50%; */
+  }
+  svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  #one {
+
+  }

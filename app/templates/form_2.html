@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+    <title>{% block title %}Form{% endblock %}</title>
+{% block content %}
+<h1>{% block form_title %}Form Title {% endblock %}</h1>
+<form action="{{form_action}}">
+    {% block formContent %}
+    <label for="input">input</label>
+    <input type="text" name="input">
+    {% endblock %}
+    <button type="submit">Submit</button>
+
+</form>
+{% endblock %}
