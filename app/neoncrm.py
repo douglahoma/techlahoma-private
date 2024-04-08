@@ -10,6 +10,7 @@ breadcrums leading us back to where it's defined in the source code.
 
 import os
 import requests
+from datetime import datetime
 
 from flask import session
 from dotenv import load_dotenv
@@ -24,7 +25,11 @@ class API:
     ACCESS_TOKEN_URL = 'https://app.neoncrm.com/np/oauth/token'
     API_LOGIN_URL = "https://api.neoncrm.com/neonws/services/api/common/login?login.apiKey={}&login.orgid={}"
     CONSTITUENT_INFO_URL = "https://api.neoncrm.com/neonws/services/api/account/retrieveIndividualAccount?userSessionId={}&accountId={}"
-    POINTS_URL = "https://api.neoncrm.com/neonws/services/api/customObjectRecord/listCustomObjectRecords?userSessionId{}fb571bdff4adb31a36475b5f8af6c386&objectApiName=Points_c&customObjectSearchCriteriaList.customObjectSearchCriteria.criteriaField=Constituent_c&customObjectSearchCriteriaList.customObjectSearchCriteria.operator=EQUAL&customObjectSearchCriteriaList.customObjectSearchCriteria.value={}&customObjectOutputFieldList.customObjectOutputField.label=Points Activity&customObjectOutputFieldList.customObjectOutputField.columnName=name&customObjectOutputFieldList.customObjectOutputField.label=Created on&customObjectOutputFieldList.customObjectOutputField.columnName=createTime&customObjectOutputFieldList.customObjectOutputField.label=point_type&customObjectOutputFieldList.customObjectOutputField.columnName=point_type_c&customObjectOutputFieldList.customObjectOutputField.label=point_subtype&customObjectOutputFieldList.customObjectOutputField.columnName=point_subtype_c&customObjectOutputFieldList.customObjectOutputField.label=Points Awarded&customObjectOutputFieldList.customObjectOutputField.columnName=Points_Awarded_c&page.pageSize=200"
+    # incentives url takes user_session_id
+    INCENTIVES_URL = "https://api.neoncrm.com/neonws/services/api/customObjectRecord/listCustomObjectRecords?userSessionId={}&objectApiName=Incentives_c&customObjectOutputFieldList.customObjectOutputField.label=Incentive&customObjectOutputFieldList.customObjectOutputField.columnName=name&customObjectOutputFieldList.customObjectOutputField.label=Points Needed&customObjectOutputFieldList.customObjectOutputField.columnName=Points_Needed_c"
+    POINTS_URL = "https://api.neoncrm.com/neonws/services/api/customObjectRecord/listCustomObjectRecords?userSessionId={}&objectApiName=Points_c&customObjectSearchCriteriaList.customObjectSearchCriteria.criteriaField=Constituent_c&customObjectSearchCriteriaList.customObjectSearchCriteria.operator=EQUAL&customObjectSearchCriteriaList.customObjectSearchCriteria.value={}&customObjectOutputFieldList.customObjectOutputField.label=Points Activity&customObjectOutputFieldList.customObjectOutputField.columnName=name&customObjectOutputFieldList.customObjectOutputField.label=Created on&customObjectOutputFieldList.customObjectOutputField.columnName=createTime&customObjectOutputFieldList.customObjectOutputField.label=point_type&customObjectOutputFieldList.customObjectOutputField.columnName=point_type_c&customObjectOutputFieldList.customObjectOutputField.label=point_subtype&customObjectOutputFieldList.customObjectOutputField.columnName=point_subtype_c&customObjectOutputFieldList.customObjectOutputField.label=Points Awarded&customObjectOutputFieldList.customObjectOutputField.columnName=Points_Awarded_c&page.pageSize=200"
+    # event checkin url requires these arguments: user_session_id, access_token, selected_group, checkin_record_name
+    EVENT_CHECKIN_URL = "https://api.neoncrm.com/neonws/services/api/customObjectRecord/createCustomObjectRecord?userSessionId={}&customObjectRecord.objectApiName=Points_c&customObjectRecord.customObjectRecordDataList.customObjectRecordData.name=Constituent_c&customObjectRecord.customObjectRecordDataList.customObjectRecordData.value={}&customObjectRecord.customObjectRecordDataList.customObjectRecordData.name=type_for_api_c&customObjectRecord.customObjectRecordDataList.customObjectRecordData.value=check-in&customObjectRecord.customObjectRecordDataList.customObjectRecordData.name=subtype_for_api_c&customObjectRecord.customObjectRecordDataList.customObjectRecordData.value={}&customObjectRecord.customObjectRecordDataList.customObjectRecordData.name=name&customObjectRecord.customObjectRecordDataList.customObjectRecordData.value={}"
     ERROR_CODE_DESCRIPTION = {
         '1': "An unknown system error. Often, these are generated due to a badly formed API request or a problem in NeonCRM.",
         '2': "Indicates a temporary problem with NeonCRM's servers.",
@@ -109,7 +114,92 @@ class Constituent:
         """
         retrieves all the point records associated with a given user
         """
+        print(API.POINTS_URL.format(user_session_id, access_token))
         return requests.get(API.POINTS_URL.format(user_session_id, access_token)).json()
+
+    @classmethod
+    def get_incentives(cls, user_session_id):
+        """
+        returns a list of tuples of the format (points required (num), name of reward) for all the incentives
+        """
+        incentives_response = requests.get(API.INCENTIVES_URL.format(user_session_id)).json()
+        incentives_list = []
+        for item in incentives_response["listCustomObjectRecordsResponse"]["searchResults"]["nameValuePairs"]:
+            points_needed = 0
+            name = ""
+            for pair in item["nameValuePair"]:
+                if pair["name"] == "Points_Needed_c":
+                    points_needed = int(pair["value"])
+                elif pair["name"] == "name":
+                    name = pair["value"]
+            incentives_list.append((points_needed, name))
+        print(incentives_list)
+        return (incentives_list)
+
+    @classmethod
+    def retrieve_user_point_records_dictionary(cls, user_session_id, access_token):
+        # first, construct and make the API call
+        points_response = requests.get(API.POINTS_URL.format(user_session_id, access_token))
+        # then, check to see if points API call was successful
+        if points_response.status_code == 200:
+            # if it was, parse it as JSON
+            points_data = points_response.json()
+            # Now we'll make a helper function to parse the date from the response records
+            def parse_date(date_string):
+                return datetime.strptime(date_string, "%m/%d/%y")
+            points_dict = {}
+            events = []
+            for item in points_data["listCustomObjectRecordsResponse"]["searchResults"]["nameValuePairs"]:
+                event = {}
+                for pair in item["nameValuePair"]:
+                    if pair["name"] == "point_type_c":
+                        event["type"] = pair["value"]
+                    elif pair["name"] == "point_subtype_c":
+                        event["subtype"] = pair["value"]
+                    elif pair["name"] == "Points_Awarded_c":
+                        event["awarded"] = int((pair["value"]))
+                    elif pair["name"] == "createTime":
+                        event["date"] = datetime.strptime(pair["value"], "%m/%d/%Y %H:%M:%S").strftime("%m/%d/%y")
+                events.append(event)
+            # Now we will use our helper function to sort the events list based on the date, in descending order
+            events.sort(key=lambda x: parse_date(x["date"]), reverse=True)
+            # Then we can construct our final dictionary that holds the points total and the array of points records
+            total_points = 0
+            for item in events:
+                total_points += item['awarded']
+            points_dict = {
+                "points": total_points,
+                "events": events
+            }
+            print(points_dict)
+            # now let's get incentive data
+            incentives = cls.get_incentives(user_session_id)
+            earned_rewards = []
+            next_closest_reward = None
+            points_to_next_reward = None
+            # Iterate through the list of rewards
+            for points_needed, reward_name in sorted(incentives):
+                if points_dict['points'] >= points_needed:
+                    earned_rewards.append(reward_name)
+                else:
+                    # If next_closest_reward is None, it means we've found the first reward
+                    # the constituent has not yet earned, which is our next closest reward.
+                    if next_closest_reward is None:
+                        next_closest_reward = reward_name
+                        points_to_next_reward = points_needed - points_dict['points']
+                    # Once we've found the next closest reward, we can break out of the loop
+                    break
+            points_dict['earned_rewards'] = earned_rewards
+            points_dict['next_closest_reward'] = next_closest_reward
+            points_dict['points_to_next_reward'] = points_to_next_reward
+            print("about to print the points dict")
+            print(points_dict)
+            print("just printed the points dict")
+            return (points_dict)
+        else:
+            print("Failed to retrieve any points object records", points_response.status_code)
+            return ({})
+
 
 class PointsEvent:
     pass
