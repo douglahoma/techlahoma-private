@@ -119,6 +119,9 @@ class Constituent:
 
     @classmethod
     def get_incentives(cls, user_session_id):
+        """
+        returns a list of tuples of the format (points required (num), name of reward) for all the incentives
+        """
         incentives_response = requests.get(API.INCENTIVES_URL.format(user_session_id)).json()
         incentives_list = []
         for item in incentives_response["listCustomObjectRecordsResponse"]["searchResults"]["nameValuePairs"]:
@@ -169,10 +172,34 @@ class Constituent:
                 "events": events
             }
             print(points_dict)
+            # now let's get incentive data
+            incentives = cls.get_incentives(user_session_id)
+            earned_rewards = []
+            next_closest_reward = None
+            points_to_next_reward = None
+            # Iterate through the list of rewards
+            for points_needed, reward_name in sorted(incentives):
+                if points_dict['points'] >= points_needed:
+                    earned_rewards.append(reward_name)
+                else:
+                    # If next_closest_reward is None, it means we've found the first reward
+                    # the constituent has not yet earned, which is our next closest reward.
+                    if next_closest_reward is None:
+                        next_closest_reward = reward_name
+                        points_to_next_reward = points_needed - points_dict['points']
+                    # Once we've found the next closest reward, we can break out of the loop
+                    break
+            points_dict['earned_rewards'] = earned_rewards
+            points_dict['next_closest_reward'] = next_closest_reward
+            points_dict['points_to_next_reward'] = points_to_next_reward
+            print("about to print the points dict")
+            print(points_dict)
+            print("just printed the points dict")
             return (points_dict)
         else:
             print("Failed to retrieve any points object records", points_response.status_code)
             return ({})
+
 
 class PointsEvent:
     pass

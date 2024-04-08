@@ -147,8 +147,10 @@ def authorize():
 
 @app.route('/post_checkin', methods=['POST'])
 def post_checkin():
+    # grab all possible incentives and store them in the session
     incentives_list_of_tuples = neoncrm.Constituent.get_incentives(session["user_session_id"])
-    print (incentives_list_of_tuples)
+    session["all_incentives"] = incentives_list_of_tuples
+    # now let's get ready to post their new checkin event
     selected_group = request.form.get('selected_group')
     print("about to print the group they selected")
     print(selected_group)
