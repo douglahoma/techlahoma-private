@@ -189,82 +189,8 @@ def post_checkin():
     user_session_id = session['user_session_id']
     access_token = session['access_token']
     points_dict = neoncrm.Constituent.retrieve_user_point_records_dictionary(user_session_id, access_token)
-    # points_response = requests.get(neoncrm.API.POINTS_URL.format(session["user_session_id"], session["access_token"]))
-    # # print the raw response for debugging
-    # print("about to print the reponse when getting the points for the constituent")
-    # print(points_response)
-    # print("just finished printing the reponse we got when getting the points for the constituent")
-    # # then, check to see if points API call was successful
-    # if points_response.status_code == 200:
-    #     # if it was, parse it as JSON
-    #     points_data = points_response.json()
-    #     # print it for debugging
-    #     print("about to print the json of the points response")
-    #     print(points_data)
-    #     print("just printed the json of the points response")
-    #     # Now we'll make a helper function to parse the date from the response records
-    #     def parse_date(date_string):
-    #         return datetime.strptime(date_string, "%m/%d/%y")
-    #     # And then we can extract and transform the points records
-    #     points_dict = {}
-    #     events = []
-    #     for item in points_data["listCustomObjectRecordsResponse"]["searchResults"]["nameValuePairs"]:
-    #         event = {}
-    #         for pair in item["nameValuePair"]:
-    #             if pair["name"] == "point_type_c":
-    #                 event["type"] = pair["value"]
-    #             elif pair["name"] == "point_subtype_c":
-    #                 event["subtype"] = pair["value"]
-    #             elif pair["name"] == "Points_Awarded_c":
-    #                 event["awarded"] = int((pair["value"]))
-    #             elif pair["name"] == "createTime":
-    #                 event["date"] = datetime.strptime(pair["value"], "%m/%d/%Y %H:%M:%S").strftime("%m/%d/%y")
-    #         events.append(event)
-    #     # Now we will use our helper function to sort the events list based on the date, in descending order
-    #     # (this would be extremely error-prone if we were trying to sort them by the date strings they now have)
-    #     events.sort(key=lambda x: parse_date(x["date"]), reverse=True)
-    #     # Then we can construct our final dictionary that holds the points total and the array of points records with details
-    #     total_points = 0
-    #     for item in events:
-    #         total_points += item['awarded']
-    #     print(total_points)
-    #     points_dict = {
-    #         "points": total_points,
-    #         "events": events
-    #     }
-    #     print("now about to print the points dict")
-    #     print(points_dict)
-    #     print("thus ends the points dict")
-    # else:
-    #     print("Failed to retrieve any points object records", points_response.status_code)
 
-#### Commenting out this useful block because I am in a rush
-# else:
-#     # handle case where API call is not successful
-#     print(f"Could not retrieve account info. Status code: {constituent_info_response.status_code}")
 
-#     else:
-#         print("login failed. No user session ID received.")
-# else:
-#     # if the login was not a success, we will print out our terrible news
-#     print("I am mortified to admit that the api login failed. Maybe someone canceled the atlas user account? The system replied: ", operation_result)
-#     # if there are specific errors provided, we'll print them out too
-#     if 'errors' in login_response:
-#         errors_list = login_response['errors']['error']
-#         for error in errors_list:
-#             error_code = str(error['errorCode'])
-#             error_message = error['errorMessage']
-#             error_description = error_code_descriptions.get(error_code, "No description available.")
-#             print(f"Error code: {error_code}, Message: {error_message}. Description: {error_description}")
-# else:
-# # if the HTTP request itself to the API failed to connect,
-# # we'll admit our problem and print our the status code:
-# print('Sadly, could not even connect to the api...', api_response.status_code)
-# #
-# #
-# ------------------------------------------------------------------------------- #
-# ----------- and that is the end of the API User Authentication block ---------- #
-# ------------------------------------------------------------------------------- #
 
     constituent_name = session['constituent_name']
 
