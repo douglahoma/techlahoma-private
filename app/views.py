@@ -107,6 +107,7 @@ def authorize():
                     session['constituent_name'] = constituent_name
                     ### Deal with the exception later
                     # Now let's get the points records
+                    print(f"user_session_id is {session['user_session_id']}")
                     points_records = neoncrm.Constituent.retrieve_user_point_records(session['user_session_id'], session['access_token'])
                     print(points_records)
                     # print(points_records["listCustomObjectRecordsResponse"]["searchResults"]["nameValuePairs"])

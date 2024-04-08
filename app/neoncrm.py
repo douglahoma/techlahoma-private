@@ -24,7 +24,7 @@ class API:
     ACCESS_TOKEN_URL = 'https://app.neoncrm.com/np/oauth/token'
     API_LOGIN_URL = "https://api.neoncrm.com/neonws/services/api/common/login?login.apiKey={}&login.orgid={}"
     CONSTITUENT_INFO_URL = "https://api.neoncrm.com/neonws/services/api/account/retrieveIndividualAccount?userSessionId={}&accountId={}"
-    POINTS_URL = "https://api.neoncrm.com/neonws/services/api/customObjectRecord/listCustomObjectRecords?userSessionId{}fb571bdff4adb31a36475b5f8af6c386&objectApiName=Points_c&customObjectSearchCriteriaList.customObjectSearchCriteria.criteriaField=Constituent_c&customObjectSearchCriteriaList.customObjectSearchCriteria.operator=EQUAL&customObjectSearchCriteriaList.customObjectSearchCriteria.value={}&customObjectOutputFieldList.customObjectOutputField.label=Points Activity&customObjectOutputFieldList.customObjectOutputField.columnName=name&customObjectOutputFieldList.customObjectOutputField.label=Created on&customObjectOutputFieldList.customObjectOutputField.columnName=createTime&customObjectOutputFieldList.customObjectOutputField.label=point_type&customObjectOutputFieldList.customObjectOutputField.columnName=point_type_c&customObjectOutputFieldList.customObjectOutputField.label=point_subtype&customObjectOutputFieldList.customObjectOutputField.columnName=point_subtype_c&customObjectOutputFieldList.customObjectOutputField.label=Points Awarded&customObjectOutputFieldList.customObjectOutputField.columnName=Points_Awarded_c&page.pageSize=200"
+    POINTS_URL = "https://api.neoncrm.com/neonws/services/api/customObjectRecord/listCustomObjectRecords?userSessionId={}fb571bdff4adb31a36475b5f8af6c386&objectApiName=Points_c&customObjectSearchCriteriaList.customObjectSearchCriteria.criteriaField=Constituent_c&customObjectSearchCriteriaList.customObjectSearchCriteria.operator=EQUAL&customObjectSearchCriteriaList.customObjectSearchCriteria.value={}&customObjectOutputFieldList.customObjectOutputField.label=Points Activity&customObjectOutputFieldList.customObjectOutputField.columnName=name&customObjectOutputFieldList.customObjectOutputField.label=Created on&customObjectOutputFieldList.customObjectOutputField.columnName=createTime&customObjectOutputFieldList.customObjectOutputField.label=point_type&customObjectOutputFieldList.customObjectOutputField.columnName=point_type_c&customObjectOutputFieldList.customObjectOutputField.label=point_subtype&customObjectOutputFieldList.customObjectOutputField.columnName=point_subtype_c&customObjectOutputFieldList.customObjectOutputField.label=Points Awarded&customObjectOutputFieldList.customObjectOutputField.columnName=Points_Awarded_c&page.pageSize=200"
     ERROR_CODE_DESCRIPTION = {
         '1': "An unknown system error. Often, these are generated due to a badly formed API request or a problem in NeonCRM.",
         '2': "Indicates a temporary problem with NeonCRM's servers.",
@@ -109,6 +109,7 @@ class Constituent:
         """
         retrieves all the point records associated with a given user
         """
+        print(API.POINTS_URL.format(user_session_id, access_token))
         return requests.get(API.POINTS_URL.format(user_session_id, access_token)).json()
 
 class PointsEvent:
