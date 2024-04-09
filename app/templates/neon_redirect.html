@@ -7,7 +7,7 @@
     <div class="container">
         <div class="vis-container">
             <div class="vis">
-                <p id="points"><span id="points_num">2</span><span> /</span><span id="rewards-total"> 12</span></p>
+                <p id="points"><span id="points_num">{{points_total}}</span><span> /</span><span id="rewards-total"> {{points_to_next_reward}}</span></p>
             </div>
             <svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="80" cy="80" r="72" />
@@ -18,8 +18,8 @@
     <!-- <a href='https://techlahoma.app.neoncrm.com/np/logout.do?targetUrl={{ logout_url }}'>log out</a> -->
 
     <!-- EDGE CASE: when someone has reached max points, REWARD will be 'none' -->
-    <p>only X points away from REWARD</p>
-    <p id="1">Intrested in earning more points? We love giving out bonus points! Click below to share a bit about yourself and earn POINTS more points</p>
+    <p>only {{points_to_next_reward}} points away from {{next_closest_reward}}</p>
+    <p id="1">Intrested in earning more points? We love giving out bonus points! Click below to share a bit about yourself and earn {{next_data_update_points_value}} more points</p>
     <a class="button-primary" href="/">Get More Points!</a>
 </main>
 <script defer="true">

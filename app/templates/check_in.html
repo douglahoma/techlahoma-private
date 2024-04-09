@@ -1,19 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Techlahoma Log In</title>
-    <link rel="stylesheet" href="../static/landing.css">
-</head>
-<body>
-
-    <header>
-        <img
-        src="../static/techlahoma_white.png"
-        alt="Techlahoma Logo"
-        >
-    </header>
+{% extends "base.html" %}
+{% block title %} Check In {% endblock %}
+{% block header %}
+    <div id="header-img">
+        <img class="header-img" src="{{url_for('static', filename='techlahoma_bson_white.svg')}}" alt="">
+        <img class="header-img" src="{{url_for('static', filename='techlahoma_text_white.png')}}" alt="">
+    </div>
+{% endblock %}  
+{% block content %}
     <main>
         <form action="{{ url_for('post_checkin') }}" method="post">
             <select name="selected_group">
@@ -41,6 +35,4 @@
 
 
     </main>
-</body>
-
-</html>
+{% endblock %}
