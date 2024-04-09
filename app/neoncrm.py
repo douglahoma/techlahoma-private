@@ -14,10 +14,6 @@ import random
 from datetime import datetime
 
 from flask import session
-from dotenv import load_dotenv
-
-# Load environment variables from .env file
-load_dotenv()
 
 class API:
     """INTERFACE CLASS REPRESENTING NEONCRM AND HOW WE INTERACT WITH IT"""
