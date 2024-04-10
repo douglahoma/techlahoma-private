@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %} Account Details {% endblock %}
+{% block style %}
+<link rel="stylesheet" href="{{url_for('static', filename='account_details.css')}}">
+{% endblock %}
+
+{% block content %}
+<main id="account_details">
+<h1><span>{{name}}</span><span>{{points}} points</span></h1>
+<h2>All Rewards</h2>
+<ul>
+    {% for reward in rewards_dict%}
+    <li><span>{{reward[0]}}</span><span>{{reward[1]}}</span></li>
+    {% endfor %}
+</ul>
+<h2>Points History</h2>
+<ul>
+    {% for point in points_history %}
+    <li><span>{{point[0]}}</span><span>{{point[1]}}</span><span>{{point[2]}}</span><span>{{point[3]}}</span></li>
+    {% endfor %}
+</ul>
+</main>
+{% endblock %}

@@ -1,8 +1,9 @@
-{% extends "form.html" %}
+{% extends "base.html" %}
 {% block title %}LinkedIn Form{% endblock %}
-{% block formContent %}
-    <p>Please enter your LinkedIn profile URL</p>
-    <label for="linkedin"></label>
+{% block content %}
+    <form action="" method="post">
+    <label for="linkedin">Please enter your LinkedIn profile URL</label>
     <input type="text" name="linkedin" placeholder="linkedin.com/in/your-profile" required/>
-    <button type="submit">Submit</button>
+    <button class="button-primary" type="submit">Submit</button>
+    </form>
 {% endblock %}
