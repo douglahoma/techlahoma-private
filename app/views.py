@@ -213,11 +213,12 @@ def post_checkin():
         points_total = points_dict['points'],
         next_closest_reward = points_dict['next_closest_reward'],
         points_to_next_reward = points_dict['points_to_next_reward'],
+        points_value_of_next_reward = points_dict['points_value_of_next_reward'],
         eligible_for_data_update = points_dict['eligible_for_data_update'],
         next_data_update  = points_dict['next_data_update'],
         next_data_update_points_value = points_dict['next_data_update_points_value'],
         array_of_earned_rewards = points_dict['earned_rewards'],
-        array_of_checkin_records = points_dict['events']
+        array_of_checkin_records = points_dict['events'],
     )
 
 

@@ -191,6 +191,7 @@ class Constituent:
             earned_rewards = []
             next_closest_reward = None
             points_to_next_reward = None
+            points_value_of_next_reward = None
             # Iterate through the list of rewards
             for points_needed, reward_name in sorted(incentives):
                 if points_dict['points'] >= points_needed:
@@ -200,12 +201,14 @@ class Constituent:
                     # the constituent has not yet earned, which is our next closest reward.
                     if next_closest_reward is None:
                         next_closest_reward = reward_name
+                        points_value_of_next_reward = points_needed
                         points_to_next_reward = points_needed - points_dict['points']
                     # Once we've found the next closest reward, we can break out of the loop
                     break
             points_dict['earned_rewards'] = earned_rewards
             points_dict['next_closest_reward'] = next_closest_reward
             points_dict['points_to_next_reward'] = points_to_next_reward
+            points_dict['points_value_of_next_reward'] = points_value_of_next_reward
             next_data_update = ""
             if possible_data_updates:
                 # if any possible data updates haven't been done, pick the next one at random
