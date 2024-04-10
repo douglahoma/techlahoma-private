@@ -185,41 +185,42 @@ def post_checkin():
         # now let's get ready to post their new checkin event
         selected_group = request.form.get('selected_group')
         if selected_group:
-            print("about to print the group they selected")
-            print(selected_group)
-            print("that was the group they selected")
-            # First, let's create the new Points record in NeonCRM
-            # we begin by creating our API request
-            # Note ---- we need to double-check that it's okay ------ WE HAVE NOT CODED THAT PART YET
-            user_session_id = session['user_session_id']
-            access_token = session['access_token']
-            # and to include today's date in the name of the record, we'll need to get it
-            today = datetime.today()
-            formatted_date = today.strftime("%m/%d/%y")
-            print(f"about to make a checkin record for {formatted_date}")
-            checkin_record_name = f'check-in: {selected_group} - {formatted_date}'
-            print(f"we will call the record {checkin_record_name}")
-            # and format and send the API request
-            checkin_response = requests.post(neoncrm.API.EVENT_CHECKIN_URL.format(user_session_id, access_token, selected_group, checkin_record_name))
-            #print the raw response for debugging
-            print("just submitted the post request to check in to the event. About to print the response code.")
-            print(checkin_response)
-            print("that was the response code")
-            # then, check to see if checkin api call was successful
-            if checkin_response.status_code == 200:
-                # if it was, parse it as JSON
-                checkin_data = checkin_response.json()
-                # print it for debugging
-                print("about to print the json of the reponse we got back")
-                print(checkin_data)
-                print("that was the json of the reponse we got back")
-                # and let's grab an updated points_dict
-                points_dict = neoncrm.Constituent.retrieve_user_point_records_dictionary(user_session_id, access_token)
-                # and update the points_dict in the session
-                session['points_dict'] = points_dict
-            else:
-                print("whoops")
-                ##! Fix this later, add error handling
+            if points_dict['eligible_for_checkin'] == True:
+                print("about to print the group they selected")
+                print(selected_group)
+                print("that was the group they selected")
+                # First, let's create the new Points record in NeonCRM
+                # we begin by creating our API request
+                # Note ---- we need to double-check that it's okay ------ WE HAVE NOT CODED THAT PART YET
+                user_session_id = session['user_session_id']
+                access_token = session['access_token']
+                # and to include today's date in the name of the record, we'll need to get it
+                today = datetime.today()
+                formatted_date = today.strftime("%m/%d/%y")
+                print(f"about to make a checkin record for {formatted_date}")
+                checkin_record_name = f'check-in: {selected_group} - {formatted_date}'
+                print(f"we will call the record {checkin_record_name}")
+                # and format and send the API request
+                checkin_response = requests.post(neoncrm.API.EVENT_CHECKIN_URL.format(user_session_id, access_token, selected_group, checkin_record_name))
+                #print the raw response for debugging
+                print("just submitted the post request to check in to the event. About to print the response code.")
+                print(checkin_response)
+                print("that was the response code")
+                # then, check to see if checkin api call was successful
+                if checkin_response.status_code == 200:
+                    # if it was, parse it as JSON
+                    checkin_data = checkin_response.json()
+                    # print it for debugging
+                    print("about to print the json of the reponse we got back")
+                    print(checkin_data)
+                    print("that was the json of the reponse we got back")
+                    # and let's grab an updated points_dict
+                    points_dict = neoncrm.Constituent.retrieve_user_point_records_dictionary(user_session_id, access_token)
+                    # and update the points_dict in the session
+                    session['points_dict'] = points_dict
+                else:
+                    print("whoops")
+                    ##! Fix this later, add error handling
 
 
     constituent_name = session['constituent_name']
