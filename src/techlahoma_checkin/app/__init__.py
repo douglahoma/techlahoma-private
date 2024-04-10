@@ -1,6 +1,6 @@
 from .config import Config
 from .secretkey import SecretKey
-from flask import Flask, session
+from flask import Flask
 from flask_session import Session
 from dotenv import load_dotenv
 

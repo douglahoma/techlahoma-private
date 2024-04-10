@@ -6,18 +6,57 @@
 
 {% block content %}
 <main id="account_details">
-<h1><span>{{name}}</span><span>{{points}} points</span></h1>
-<h2>All Rewards</h2>
-<ul>
-    {% for reward in rewards_dict%}
-    <li><span>{{reward[0]}}</span><span>{{reward[1]}}</span></li>
-    {% endfor %}
-</ul>
+<h1><span>{{name}}</span><span>{{points_dict['points']}} points</span></h1>
+
+{%- if points_dict['earned_rewards'] -%}
+    <h2>My Rewards</h2>
+    <ul>
+        {% for reward in points_dict['earned_rewards'] %}
+                <li><span>{{reward}}</span></li>
+        {% endfor %}
+    </ul>
+{% endif %}
 <h2>Points History</h2>
-<ul>
-    {% for point in points_history %}
-    <li><span>{{point[0]}}</span><span>{{point[1]}}</span><span>{{point[2]}}</span><span>{{point[3]}}</span></li>
+<div class="event-card-container">
+    {% for event in points_dict['events'] %}
+        <div class="event-card" onclick="showModal(`{{event['date']}}`, `{{event['type']}}`, `{{event['subtype']}}`, `{{event['awarded']}}`)">
+            <span>{{ event['date'] }}</span> - <span>{{ event['type'] }}</span>
+        </div>
     {% endfor %}
-</ul>
+</div>
 </main>
+
+<!-- the modal -->
+<div id="eventModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <p id="modalText">Event details</p>
+      <img src="{{ url_for('static', filename='transparent_json.png') }}" alt="JSON the BSON" style="width: 40vw; max-width: 250px;">
+    </div>
+</div>
+
+<script>
+    function showModal(date, type, subtype, awarded) {
+        var modal = document.getElementById("eventModal");
+        var modalText = document.getElementById("modalText");
+        modal.style.display = "block";
+        if (type === 'data update') {
+            modalText.innerHTML = `Date: ${date}<br>Data Update - thank you for sharing with us!<br>Points Awarded: ${awarded}`;
+        } else {
+            modalText.innerHTML = `Date: ${date}<br>${type} - ${subtype}<br>You earned ${awarded} points`;
+        }
+    }
+    function closeModal() {
+        var modal = document.getElementById("eventModal");
+        modal.style.display = "none";
+    }
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        var modal = document.getElementById("eventModal");
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+</script>
+
 {% endblock %}
