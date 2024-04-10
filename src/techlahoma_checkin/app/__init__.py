@@ -14,7 +14,7 @@ app.secret_key = SecretKey()
 sess = Session()
 sess.init_app(app)
 
-from webapp import views
+from . import views
     
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)

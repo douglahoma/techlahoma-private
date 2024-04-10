@@ -1,11 +1,11 @@
 import os
 import requests
 
-from webapp import app, neoncrm
 from flask import render_template, session, request, redirect, url_for
 from dotenv import load_dotenv
 from datetime import datetime
 
+from . import app, neoncrm
 
 # Load environment variables from .env file
 load_dotenv()
