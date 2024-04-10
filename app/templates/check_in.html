@@ -5,11 +5,11 @@
         <img class="header-img" src="{{url_for('static', filename='techlahoma_bson_white.svg')}}" alt="">
         <img class="header-img" src="{{url_for('static', filename='techlahoma_text_white.png')}}" alt="">
     </div>
-{% endblock %}  
+{% endblock %}
 {% block content %}
 <h1>Welcome, {{name}}</h1>
     <main>
-        <form action="{{ url_for('post_checkin') }}" method="post">
+        <form action="{{ url_for('dashboard') }}" method="post">
             <select class="dropdown" name="selected_group" required>
                 <option value="" disabled selected>Select an Event</option>
                 {% for group in check_in_options %}
