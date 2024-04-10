@@ -172,11 +172,11 @@ def authorize():
         check_in_options=check_in_options
     )
     else:
-        return redirect(url_for('post_checkin'))
+        return redirect(url_for('dashboard'))
 
 
-@app.route('/post_checkin', methods=['POST', 'GET'])
-def post_checkin():
+@app.route('/dashboard', methods=['POST', 'GET'])
+def dashboard():
     # grab all possible incentives and store them in the session
     incentives_list_of_tuples = neoncrm.Constituent.get_incentives(session["user_session_id"])
     session["all_incentives"] = incentives_list_of_tuples
@@ -255,7 +255,7 @@ def error():
 @app.route('/logout')
 def logout():
     session.clear()
-    return redirect(url_for('landing'))
+    return redirect("https://techlahoma.app.neoncrm.com/np/logout.do?targetUrl=https://www.techlahoma.org")
 
 @app.route('/account_details')
 def test():
