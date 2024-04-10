@@ -6,17 +6,20 @@
 
 {% block content %}
 <main id="account_details">
-<h1><span>{{name}}</span><span>{{points}} points</span></h1>
-<h2>All Rewards</h2>
-<ul>
-    {% for reward in rewards_dict%}
-    <li><span>{{reward[0]}}</span><span>{{reward[1]}}</span></li>
-    {% endfor %}
-</ul>
+<h1><span>{{name}}</span><span>{{points_dict['points']}} points</span></h1>
+
+{%- if points_dict['earned_rewards'] -%}
+    <h2>My Rewards</h2>
+    <ul>
+        {% for reward in points_dict['earned_rewards'] %}
+                <li><span>{{reward}}</span></li>
+        {% endfor %}
+    </ul>
+{% endif %}
 <h2>Points History</h2>
 <ul>
-    {% for point in points_history %}
-    <li><span>{{point[0]}}</span><span>{{point[1]}}</span><span>{{point[2]}}</span><span>{{point[3]}}</span></li>
+    {% for event in points_dict['events'] %}
+    <li><span>{{event['date']}}</span><span>{{event['type']}}</span><span>{{event['subtype']}}</span><span>{{event['awarded']}} points</span></li>
     {% endfor %}
 </ul>
 </main>

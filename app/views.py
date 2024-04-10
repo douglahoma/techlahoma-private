@@ -11,7 +11,7 @@ from datetime import datetime
 load_dotenv()
 
 redirect_uri = os.getenv("REDIRECT_URI")
-logout_url = os.getenv("LOGOUT_URL")
+# logout_url = os.getenv("LOGOUT_URL")
 
 @app.route('/')
 def landing():
@@ -167,7 +167,7 @@ def authorize():
     if points_dict['eligible_for_checkin'] == True:
         return render_template(
         'check_in.html',
-        logout_url=os.getenv("LOGOUT_URL"),
+        # logout_url=os.getenv("LOGOUT_URL"),
         name=constituent_name,
         check_in_options=check_in_options
     )
@@ -226,13 +226,13 @@ def dashboard():
     constituent_name = session['constituent_name']
     incentives = session['list_of_incentives']
     all_incentives_as_a_list_of_tuples_with_points_value_and_name = sorted(incentives)
-    logout_url=os.getenv("LOGOUT_URL")
+    # logout_url=os.getenv("LOGOUT_URL")
 
     return render_template(
         'dashboard.html',
         user=session["access_token"],
         all_incentives_as_a_list_of_tuples_with_points_value_and_name = all_incentives_as_a_list_of_tuples_with_points_value_and_name,
-        logout_url=logout_url,
+        # logout_url=logout_url,
         name=constituent_name,
         points_total = points_dict['points'],
         next_closest_reward = points_dict['next_closest_reward'],
@@ -258,31 +258,10 @@ def logout():
     return redirect("https://techlahoma.app.neoncrm.com/np/logout.do?targetUrl=https://www.techlahoma.org")
 
 @app.route('/account_details')
-def test():
-    rewards_dict = [['reward_title', 25], ['reward_title2', 75]]
-    points_history = [
-        [
-            'type',
-            'subtype',
-            'date',
-            'points'
-        ],
-        [
-            'type',
-            'subtype',
-            'date',
-            'points'
-        ],
-    ]
-    constituent_name = "John Doe"
-    constituent_points = 69
-
+def account_details():
     return render_template('account_details.html',
-    rewards_dict=rewards_dict,
-    points_history=points_history,
-    name=constituent_name,
-    points=constituent_points,
-    logout_url=os.getenv("LOGOUT_URL")
+    points_dict=session['points_dict'],
+    name=session['constituent_name'],
     )
 @app.route('/test')
 def test_page():
