@@ -1,53 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Techlahoma Log In</title>
-    <!-- Pico Css -->
-    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.classless.min.css"/> -->
-    <!-- Custom CSS -->
-    <!-- <link rel="stylesheet" href="{{url_for('static', filename='landing.css')}}"/> -->
-    <link rel="stylesheet" href="../static/landing.css">
-</head>
-<body>
-
-    <header>
-        <!-- src for flask -->
-        <!-- src="{{url_for('static', filename='techlahoma_white.png')}}" -->
-        <!-- src for "LiveServer VSCode extention" -->
-        <!-- src="../static/techlahoma_white.png" -->
-        <img
-        src="../static/techlahoma_white.png"
-        alt="Techlahoma Logo"
-        >
-    </header>
-    <main>
-        <div class="cont">
-            <a class="neonCRM-link" href="{{login_url}}" style="text-decoration:none" >Log in With NeonCRM</a>
-        </div>
-        <div class="poly-wrapper">
-            <div class="polygon"></div>
-        </div>
-
-        <div class="faq-wrapper">
-            <h1>First time Logging in?</h1>
-            <p>Check out these helpful resources</p>
-            <label for="q1">
-                <span>First time logging in to NeonCRM</span>
-                <!-- <img src="{{url_for('static', filename='drowpdown_arrow.png')}}" alt=""> -->
-            </label>
-            <input type="checkbox" id="q1">
-            <div class="faq-content" id="a1">
-                <p>Here are some instructions telling you to click the reset password link.</p>
-            </div>
-            <label for="q2"><span>Dont have a Techlahoma Account?</span></label>
-            <input type="checkbox" id="q2">
-            <div class="faq-content" id="a2">
-                <p>Here are instructions telling you how to create your Techlahoma account</p>
-            </div>
-        </div>
-    </main>
-</body>
-
-</html>
+{% extends "base.html" %}
+{% block title %} Check In {% endblock %}
+{% block header %}
+<header id="header-img">
+    <img class="header-img" src="{{url_for('static', filename='techlahoma_bson_white.svg')}}" alt="">
+    <img class="header-img" src="{{url_for('static', filename='techlahoma_text_white.png')}}" alt="">
+</header>
+{% endblock %}
+{% block content %}
+<main>
+    <div class="cont">
+        <a class="button-primary" href="{{login_url}}" style="text-decoration:none" >Log in With NeonCRM</a>
+    </div>
+    <div class="poly-wrapper">
+        <div class="polygon"></div>
+    </div>
+</main>
+{% endblock %}

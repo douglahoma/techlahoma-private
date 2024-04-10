@@ -1,17 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <p>We couldn't find the page you were looking for. This is either because:</p>
-    <ul>
-        <li>There is an error in the URL entered into your web browser. Please check the URL and try again.</li>
-        <li>The page you are looking for has been moved or deleted.</li>
-    </ul>
-    <p>You can return to our homepage by clicking <a href="/capstone_repo/landing.html">here</a></p>
+{% extends 'base.html' %}
+{% block style %}
+<link rel="stylesheet" href="{{url_for('static', filename='error.css')}}">
+{% endblock %}
+{% block title %} Error {% endblock %}
+{% block header %}
+<img src="{{url_for('static', filename='techlahoma_bson_white.svg')}}" alt="">
+{% endblock %}
+{% block content %}
+{% if error %}
+<p>{{error.code}}</p>
+<h1>{{error.message}}</h1>
+<p>{{error.description}}</p>
+{% else %}
+<p>Error Code</p>
+<h1>Error Message</h1>
+<p>Error Description</p>
 
-</body>
-</html>
+<a class="button-primary" href="/" style="text-decoration:none">Return Home</a>
+
+{% endif %}
+{% endblock %}

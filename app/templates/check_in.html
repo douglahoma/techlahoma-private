@@ -1,46 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Techlahoma Log In</title>
-    <link rel="stylesheet" href="../static/landing.css">
-</head>
-<body>
-
-    <header>
-        <img
-        src="../static/techlahoma_white.png"
-        alt="Techlahoma Logo"
-        >
-    </header>
+{% extends "base.html" %}
+{% block title %} Check In {% endblock %}
+{% block header %}
+    <div id="header-img">
+        <img class="header-img" src="{{url_for('static', filename='techlahoma_bson_white.svg')}}" alt="">
+        <img class="header-img" src="{{url_for('static', filename='techlahoma_text_white.png')}}" alt="">
+    </div>
+{% endblock %}  
+{% block content %}
+<h1>Welcome, {{name}}</h1>
     <main>
         <form action="{{ url_for('post_checkin') }}" method="post">
-            <select name="selected_group">
-                <option value="SheCodesTulsa">SheCodesTulsa</option>
-                <option value="Tulsa Web Devs">Tulsa Web Devs</option>
-                <option value="Tulsa UX">Tulsa UX</option>
-                <option value="Tulsa Game Developers">Tulsa Game Developers</option>
-                <option value="Tulsa Developers Association">Tulsa Developers Association</option>
-                <option value="Tulsa Agile Practitioners">Tulsa Agile Practitioners</option>
-                <option value="Tulsa Area Techlahoma">Tulsa Area Techlahoma</option>
-                <option value="OKC-Sharp">OKC-Sharp</option>
-                <option value="OKC LUGnuts">OKC LUGnuts</option>
-                <option value="Oklahoma Game Developers">Oklahoma Game Developers</option>
-                <option value="Oklahoma City Java Users">Oklahoma City Java Users</option>
-                <option value="Oklahoma City Techlahoma">Oklahoma City Techlahoma</option>
-                <option value="UX Connect OKC">UX Connect OKC</option>
-                <option value="OKC WebDevs">OKC WebDevs</option>
-                <option value="OKC Open Source Hardware">OKC Open Source Hardware</option>
-                <option value="Pythonistas">Pythonistas</option>
-                <option value="Salesforce Meetup Group">Salesforce Meetup Group</option>
-                <option value="SheCodesOKC">SheCodesOKC</option>
+            <select class="dropdown" name="selected_group" required>
+                <option value="" disabled selected>Select an Event</option>
+                {% for group in check_in_options %}
+                    <option value="{{ group }}">{{ group }}</option>
+                {% endfor %}
             </select>
-            <button type="submit">Submit</button>
+            <button class="button-primary" type="submit">Submit</button>
         </form>
 
 
     </main>
-</body>
-
-</html>
+{% endblock %}
