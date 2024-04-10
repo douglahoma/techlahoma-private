@@ -1,6 +1,5 @@
-import os
-
 from .config import Config
+from .secretkey import SecretKey
 from flask import Flask, session
 from flask_session import Session
 from dotenv import load_dotenv
@@ -10,12 +9,12 @@ load_dotenv()
 
 app = Flask(__name__)
 app.config.from_object(Config)
-app.secret_key = os.getenv("SESSION_SECRET_KEY").encode()
+app.secret_key = SecretKey()
 
 sess = Session()
 sess.init_app(app)
 
-from app import views
+from webapp import views
     
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)
