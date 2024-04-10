@@ -201,7 +201,8 @@ def post_checkin():
 
 
     constituent_name = session['constituent_name']
-    all_incentives_as_a_list_of_tuples_with_points_value_and_name = session['list_of_incentives']
+    incentives = session['list_of_incentives']
+    all_incentives_as_a_list_of_tuples_with_points_value_and_name = sorted(incentives)
     logout_url=os.getenv("LOGOUT_URL")
 
     return render_template(
