@@ -208,6 +208,12 @@ class Constituent:
             points_dict['earned_rewards'] = earned_rewards
             points_dict['next_closest_reward'] = next_closest_reward
             points_dict['points_to_next_reward'] = points_to_next_reward
+            if points_value_of_next_reward is None:
+                # of there is no next reward, put the value of the highest possible reward
+                # in 'points_value_of_next_reward'
+                # (at the request of the front-end designer)
+                sorted_incentives = sorted(incentives)
+                points_value_of_next_reward = sorted_incentives[-1][0]
             points_dict['points_value_of_next_reward'] = points_value_of_next_reward
             next_data_update = ""
             if possible_data_updates:
