@@ -1,6 +1,7 @@
   'points'
   'next_closest_reward'
   'points_to_next_reward'
+  'points_value_of_next_reward'
   'eligible_for_checkin'
   'eligible_for_data_update'
   'next_data_update'

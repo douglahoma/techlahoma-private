@@ -6,6 +6,7 @@ from flask import render_template, session, request, redirect, url_for
 from dotenv import load_dotenv
 from datetime import datetime
 
+
 # Load environment variables from .env file
 load_dotenv()
 
@@ -143,11 +144,32 @@ def authorize():
 
     session['points_dict'] = points_dict
 
+    check_in_options = [
+    "SheCodesTulsa",
+    "Tulsa Web Devs",
+    "Tulsa UX",
+    "Tulsa Game Developers",
+    "Tulsa Developers Association",
+    "Tulsa Agile Practitioners",
+    "Tulsa Area Techlahoma",
+    "OKC-Sharp",
+    "OKC LUGnuts",
+    "Oklahoma Game Developers",
+    "Oklahoma City Java Users",
+    "Oklahoma City Techlahoma",
+    "UX Connect OKC",
+    "OKC WebDevs",
+    "OKC Open Source Hardware",
+    "Pythonistas",
+    "Salesforce Meetup Group",
+    "SheCodesOKC",
+]
     if points_dict['eligible_for_checkin'] == True:
         return render_template(
         'check_in.html',
         logout_url=os.getenv("LOGOUT_URL"),
-        name=constituent_name
+        name=constituent_name,
+        check_in_options=check_in_options
     )
     else:
         return redirect(url_for('post_checkin'))
@@ -232,7 +254,38 @@ def error():
 @app.route('/logout')
 def logout():
     session.clear()
-    return render_template('landing.html')
+    return redirect(url_for('landing'))
+
+@app.route('/account_details')
+def test():
+    rewards_dict = [['reward_title', 25], ['reward_title2', 75]]
+    points_history = [
+        [
+            'type',
+            'subtype',
+            'date',
+            'points'
+        ],
+        [
+            'type',
+            'subtype',
+            'date',
+            'points'
+        ],
+    ]
+    constituent_name = "John Doe"
+    constituent_points = 69
+
+    return render_template('account_details.html',
+    rewards_dict=rewards_dict,
+    points_history=points_history,
+    name=constituent_name,
+    points=constituent_points,
+    logout_url=os.getenv("LOGOUT_URL")
+    )
+@app.route('/test')
+def test_page():
+    return render_template('linkedin.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
