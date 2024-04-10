@@ -228,7 +228,7 @@ def post_checkin():
     logout_url=os.getenv("LOGOUT_URL")
 
     return render_template(
-        'neon_redirect.html',
+        'dashboard.html',
         user=session["access_token"],
         all_incentives_as_a_list_of_tuples_with_points_value_and_name = all_incentives_as_a_list_of_tuples_with_points_value_and_name,
         logout_url=logout_url,
