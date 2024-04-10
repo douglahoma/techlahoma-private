@@ -53,6 +53,8 @@ class API:
             headers=request_headers
         )
         session['access_token'] = (response.json().get('access_token'))
+        # print the access_token for debugging
+        print(session['access_token'])
 
     @classmethod
     def get_consituent_info(cls):
