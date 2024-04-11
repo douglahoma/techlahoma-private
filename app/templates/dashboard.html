@@ -10,6 +10,7 @@
         <div class="vis-container">
             <div class="vis">
                 <p id="points"><span id="points_num">{{points_total}}</span><span> /</span><span id="rewards-total"> {{points_value_of_next_reward}}</span></p>
+
             </div>
             <svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="80" cy="80" r="72" />
@@ -29,6 +30,7 @@
     </div>
     <a class="button-primary" href="/">Get More Points!</a>
     <p id="one">Interested in earning more points? <br>We love giving out bonus points! <br>Click the button to share a bit about yourself and earn {{next_data_update_points_value}} more points today.</p>
+
     {% endif %}
 </main>
 <script defer="true">
@@ -40,3 +42,4 @@
     circle.style.strokeDashoffset = stroke_dash_offset;
 </script>
 {% endblock %}
+

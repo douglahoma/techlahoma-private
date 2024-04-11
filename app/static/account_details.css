@@ -52,6 +52,7 @@ li {
     background-color: #219ebc;
     width: 80%;
     box-shadow: 0 1px 3px #a69cac;
+
 }
 .modal {
     display: none;
@@ -121,3 +122,4 @@ li {
 .points-big {
     font-size: 50px;
 }
+

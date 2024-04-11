@@ -6,6 +6,7 @@
 
 {% block content %}
 <main id="account_details">
+
 <div class="name-and-points">
     <h1 class="points-big">{{points_dict['points']}} points</h1>
     <div>
@@ -23,6 +24,7 @@
     </div>
 {% endif %}
 <h2 class="points-headers">Points History</h2>
+
 <div class="event-card-container">
     {% for event in points_dict['events'] %}
         <div class="event-card" onclick="showModal(`{{event['date']}}`, `{{event['type']}}`, `{{event['subtype']}}`, `{{event['awarded']}}`)">

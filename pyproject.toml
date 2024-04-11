@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "techlahoma_checkin"
+version = "0.0.1"
+authors = [ 
+    {name = "Jonathan Boller", email = "jonathan.boller@yahoo.co.uk"},
+]
+dependencies = [
+    "Flask", "Flask-Session", "redislite", "Werkzeug", "requests", "python-dotenv"
+]
+
+[tool.setuptools.packages.find]
+include = ["app*"]
+namespaces = false
