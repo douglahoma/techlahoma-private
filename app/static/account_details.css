@@ -49,10 +49,14 @@ li {
     border-radius: 8px;
     padding: 10px;
     margin-bottom: 10px;
-    background-color: #219ebc;
+    /* background-color: #219ebc; */
     width: 80%;
     box-shadow: 0 1px 3px #a69cac;
-
+}
+/* on click */
+.event-card:active, .event-card:hover, .event-card:focus {
+    background-color: #f8c702;
+    color: #292829;
 }
 .modal {
     display: none;
