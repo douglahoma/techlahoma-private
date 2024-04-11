@@ -140,6 +140,7 @@ def authorize():
     session['points_dict'] = points_dict
 
     check_in_options = [
+    "Atlas Demo Day",
     "SheCodesTulsa",
     "Tulsa Web Devs",
     "Tulsa UX",
