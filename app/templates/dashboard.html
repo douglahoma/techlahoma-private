@@ -2,8 +2,10 @@
 {% block title %} User Dashboard {% endblock %}
 {% block content %}
 <main>
-    <h1>Thank you for checking in!<br/> It really helps support our mission.</h1>
-
+    <div class="dashboard-header">
+        <h1>Thank you for checking in, {{name}}!</h1>
+        <p>We're glad to have you here.</p>
+    </div>
     <div class="container">
         <div class="vis-container">
             <div class="vis">
@@ -21,9 +23,12 @@
     {% if next_closest_reward is none %}
     <p>Congrats! you have unlocked all current rewards!</p>
     {% else %}
-    <p>only {{points_to_next_reward}} points away from {{next_closest_reward}}</p>
-    <p id="one">Intrested in earning more points? We love giving out bonus points! Click below to share a bit about yourself and earn {{next_data_update_points_value}} more points</p>
+    <div class="next-reward">
+        <p>only <span class="points-left">{{points_to_next_reward}}</span> points away from:</p>
+        <p>{{next_closest_reward}}</p>
+    </div>
     <a class="button-primary" href="/">Get More Points!</a>
+    <p id="one">Interested in earning more points? <br>We love giving out bonus points! <br>Click the button to share a bit about yourself and earn {{next_data_update_points_value}} more points today.</p>
     {% endif %}
 </main>
 <script defer="true">

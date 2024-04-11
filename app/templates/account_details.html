@@ -6,17 +6,23 @@
 
 {% block content %}
 <main id="account_details">
-<h1><span>{{name}}</span><span>{{points_dict['points']}} points</span></h1>
-
+<div class="name-and-points">
+    <h1 class="points-big">{{points_dict['points']}} points</h1>
+    <div>
+        <!-- <p>Thank you, {{ name }}!</p> -->
+    </div>
+</div>
 {%- if points_dict['earned_rewards'] -%}
-    <h2>My Rewards</h2>
-    <ul>
-        {% for reward in points_dict['earned_rewards'] %}
-                <li><span>{{reward}}</span></li>
-        {% endfor %}
-    </ul>
+    <h2 class="points-headers">My Rewards</h2>
+    <div class="my-rewards">
+        <ul>
+            {% for reward in points_dict['earned_rewards'] %}
+                    <li><span>{{reward}}</span></li>
+            {% endfor %}
+        </ul>
+    </div>
 {% endif %}
-<h2>Points History</h2>
+<h2 class="points-headers">Points History</h2>
 <div class="event-card-container">
     {% for event in points_dict['events'] %}
         <div class="event-card" onclick="showModal(`{{event['date']}}`, `{{event['type']}}`, `{{event['subtype']}}`, `{{event['awarded']}}`)">
