@@ -12,9 +12,5 @@ dependencies = [
     "Flask", "Flask-Session", "redislite", "Werkzeug", "requests", "python-dotenv"
 ]
 
-[project.scripts]
-auto_config = "techlahoma_checkin:dev:auto_config"
-test = "techlahoma_checkin:dev:test"
-
 [tool.setuptools]
 include-package-data = true
