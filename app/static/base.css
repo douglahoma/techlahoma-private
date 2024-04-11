@@ -32,6 +32,7 @@ h1 {
 header {
   display: flex;
   flex-direction: row;
+  align-items: center;
   /* width: 100%;
   box-sizing: border-box; */
   /* align-items: center; */
@@ -95,13 +96,33 @@ header img, .header-img {
 }
 /* Add a grey background color on mouse-over */
 .topnav a:hover {
-  background-color: #ddd;
-  color: black;
+  border: 1px solid #F8C702;
 }
 /* Style the active link */
 .active {
   background-color: #04AA6D;
   color: white;
+}
+
+/* media query width greater than 900 */
+@media screen and (min-width: 900px) {
+  .topnav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100px;
+  }
+  .topnav a {
+    padding: 12px 24px;
+  }
+  .topnav a.icon {
+    display: none;
+  }
+  .topnav #myLinks {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 }
 
 /* ------------------ COMPONENTS ------------------ */

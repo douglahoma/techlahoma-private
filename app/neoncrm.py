@@ -180,14 +180,14 @@ class Constituent:
                 # add the point to the constituent's points earned total
                 total_points += item['awarded']
                 # and if it is a data update, remove it from the ones they are eligible for
-                if event['subtype'] in possible_data_updates:
-                    possible_data_updates.remove(event['subtype'])
+                if item['subtype'] in possible_data_updates:
+                    possible_data_updates.remove(item['subtype'])
                 # and we'll check the date against today to remove the possibility for double check-ins
-                if event['date'] == today_date:
+                if item['date'] == today_date:
                     # if we find it, we'll flip the appropriate switch:
-                    if event['type'] == 'check-in':
+                    if item['type'] == 'check-in':
                         eligible_for_checkin = False
-                    elif event['type'] == 'data-update':
+                    elif item['type'] == 'data-update':
                         eligible_for_data_update = False
             points_dict = {
                 "points": total_points,
