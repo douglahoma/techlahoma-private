@@ -1,15 +1,13 @@
 import os
 import requests
 
-from app import app, neoncrm
+from pathlib import Path
+from . import app, neoncrm
 from flask import render_template, session, request, redirect, url_for
-from dotenv import load_dotenv
 from datetime import datetime
 
 
-# Load environment variables from .env file
-load_dotenv()
-
+print(f"{Path.home()}/.env")
 redirect_uri = os.getenv("REDIRECT_URI")
 # logout_url = os.getenv("LOGOUT_URL")
 

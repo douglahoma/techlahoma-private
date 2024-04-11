@@ -12,5 +12,6 @@ dependencies = [
     "Flask", "Flask-Session", "redislite", "Werkzeug", "requests", "python-dotenv"
 ]
 
-[tool.setuptools]
-include-package-data = true
+[tool.setuptools.packages.find]
+include = ["app*"]
+namespaces = false
