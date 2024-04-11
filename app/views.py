@@ -216,7 +216,62 @@ def dashboard():
                 else:
                     print("whoops")
                     ##! Fix this later, add error handling
-
+        linkedin = request.form.get('selected_group')
+        if linkedin:
+            if points_dict['eligible_for_data_update'] == True:
+                print("about to print the linkedin url they gave")
+                print(linkedin)
+                print("that was the linkedin profile they shared")
+                # First, let's create the new Points record in NeonCRM
+                # we begin by creating our API request
+                # Note ---- we need to double-check that it's okay ------ WE HAVE NOT CODED THAT PART YET
+                user_session_id = session['user_session_id']
+                access_token = session['access_token']
+                # and to include today's date in the name of the record, we'll need to get it
+                today = datetime.today()
+                formatted_date = today.strftime("%m/%d/%y")
+                print(f"about to make a data update Points record for {formatted_date}")
+                points_record_name = f'data update: linkedin - {formatted_date}'
+                print(f"we will call the record {points_record_name}")
+                data_update_subtype = "linkedin"
+                # and format and send the API request
+                data_update_points_response = requests.post(neoncrm.API.DATA_UPDATE_POINTS_OBJECT_URL.format(user_session_id, access_token, data_update_subtype, points_record_name))
+                #print the raw response for debugging
+                print("just submitted the post request to check in to the event. About to print the response code.")
+                print(data_update_points_response)
+                print("that was the response code")
+                # then, check to see if checkin api call was successful
+                if data_update_points_response.status_code == 200:
+                    # if it was, parse it as JSON
+                    data_update_points_response_data = data_update_points_response.json()
+                    # print it for debugging
+                    print("about to print the json of the reponse we got back")
+                    print(data_update_points_response_data)
+                    print("that was the json of the reponse we got back")
+                    # and let's grab an updated points_dict
+                    points_dict = neoncrm.Constituent.retrieve_user_point_records_dictionary(user_session_id, access_token)
+                    # and update the points_dict in the session
+                    session['points_dict'] = points_dict
+                    # and now let's push the actual information to the Neon CRM server in the form of a 'data update' object
+                    data_update_data_update_record_response = requests.post(neoncrm.API.DATA_UPDATE_DATA_UPDATE_RECORD_CREATION_LINKEDIN_URL.format(user_session_id, access_token, linkedin, points_record_name))
+                    print("just submitted the post request to add the 'data update' custom object record. About to print the response code.")
+                    print(data_update_data_update_record_response)
+                    print("that was the response code")
+                    # then, check to see if data update object creation api call was successful
+                    if data_update_data_update_record_response.status_code == 200:
+                        # if it was, parse it as JSON
+                        data_update_data_update_record_response_data = data_update_data_update_record_response.json()
+                        # print it for debugging
+                        print("about to print the json of the reponse we got back")
+                        print(data_update_data_update_record_response_data)
+                        print("that was the json of the reponse we got back")
+                        # and let's grab an updated points_dict
+                    else:
+                        print("data update record creation failed")
+                        ##! Fix this later, add error handling
+                else:
+                    print("whoops")
+                    ##! Fix this later, add error handling
 
     constituent_name = session['constituent_name']
     incentives = session['list_of_incentives']
@@ -258,8 +313,9 @@ def account_details():
     points_dict=session['points_dict'],
     name=session['constituent_name'],
     )
-@app.route('/test')
-def test_page():
+
+@app.route('/linkedin')
+def linkedin_form():
     return render_template('linkedin.html')
 
 if __name__ == '__main__':
