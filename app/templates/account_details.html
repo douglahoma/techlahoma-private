@@ -3,6 +3,9 @@
 {% block style %}
 <link rel="stylesheet" href="{{url_for('static', filename='account_details.css')}}">
 {% endblock %}
+{% block nav_links %}
+<a href="/dashboard">Dashboard</a>
+{% endblock %}
 
 {% block content %}
 <main id="account_details">

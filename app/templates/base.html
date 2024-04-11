@@ -18,18 +18,19 @@
             <img id="techlahoma_logo"src="{{url_for('static', filename='techlahoma_text_white.png')}}" alt="">
         </div>
                 <!-- Top Navigation Menu -->
-<div class="topnav">
-    <!-- <a href="#home" class="active">Hero</a> -->
-        <!-- "Hamburger menu" / "Bar icon" to toggle the navigation links -->
-        <a href="javascript:void(0);" class="icon" onclick="myFunction()">
-            <i class="fa fa-bars"></i>
-          </a>
-    <!-- Navigation links (hidden by default) -->
-    <div id="myLinks">
-      <a href="/my-points">My Points</a>
-      <a href="/logout">Logout</a>
-    </div>
-  </div>
+      <div class="topnav">
+          <!-- <a href="#home" class="active">Hero</a> -->
+              <!-- "Hamburger menu" / "Bar icon" to toggle the navigation links -->
+              <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+                  <i class="fa fa-bars"></i>
+                </a>
+          <!-- Navigation links (hidden by default) -->
+          <div id="myLinks">
+            {% block nav_links %}
+            {% endblock %}
+            <a href="/logout">Logout</a>
+          </div>
+        </div>
     </header>
 
     {% endblock %}

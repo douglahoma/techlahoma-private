@@ -128,7 +128,8 @@ a {
     align-items: center;
     justify-content: space-around;
     margin: 30px;
-    height: 80vh;
+    /* height: 80vh; */
+    /* height: 100%; */
     align-content: stretch;
   }
 
