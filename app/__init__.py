@@ -4,13 +4,15 @@ from .config import Config
 from flask import Flask, session
 from flask_session import Session
 from dotenv import load_dotenv
-
+from .secretkey import SecretKey
 # Load environment variables from .env file
 load_dotenv()
 
+
+
 app = Flask(__name__)
 app.config.from_object(Config)
-app.secret_key = os.getenv("SESSION_SECRET_KEY").encode()
+app.secret_key = SecretKey()
 
 sess = Session()
 sess.init_app(app)

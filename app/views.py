@@ -285,7 +285,69 @@ def test():
     )
 @app.route('/test')
 def test_page():
-    return render_template('linkedin.html')
+    return render_template('linkedin.html', form_action='/update_user_data')
+
+USER_DATA_POST_API_URL = "https://api.neoncrm.com/neonws/services/api/account/updateIndividualAccount?userSessionId={}"
+@app.route('/update_user_data', methods=['get'])
+def update_user_data():
+    constituent_info_response = requests.get(
+    neoncrm.API.CONSTITUENT_INFO_URL.format(
+        session['user_session_id'],
+        session['access_token']
+    )
+    )
+    def append_query_string(url, key, value):
+        return f"{url}&{key}={value}"
+
+    def build_query_string(data, prefix="individualAccount"):
+        query_string = ""
+        for key, value in data.items():
+            if isinstance(value, dict):
+                query_string += build_query_string(value, f"{prefix}.{key}")
+            else:
+                # if value is list, iterate over it
+                if isinstance(value, list):
+                    for item in value:
+                        query_string += build_query_string(item, f"{prefix}.{key}")
+                else:
+                    query_string += f"&{prefix}.{key}={value}"
+        return query_string
+
+    # then, check to see if the API call was successful
+    if constituent_info_response.status_code == 200:
+        # if it was, parse it as JSON
+        constituent_data = constituent_info_response.json()
+        # then grab the data about the account
+
+        constituent_account_data = constituent_data['retrieveIndividualAccountResponse']['individualAccount']
+        # try to grab the preferred name, but failing that, get the first name
+        account_id = constituent_account_data['accountId']
+        user_session_id = session['user_session_id']
+    
+    # print constituient data
+        print(constituent_account_data)
+    # clean unwanted data
+        del constituent_account_data['createdDateTime']
+        del constituent_account_data['createdBy']
+        del constituent_account_data['lastModifiedDateTime']
+        del constituent_account_data['lastModifiedBy']
+        # add dummy data for testing
+        constituent_account_data['primaryContact']['middleName'] = 'Toothpaste'
+        phoneTypes = ["phone1Type", "phone2Type", "phone3Type"]
+        # for values in primaryContact, if value is in phoneTypes, change to capitalize(value)
+        for key, value in constituent_account_data['primaryContact'].items():
+            if key in phoneTypes:
+                constituent_account_data['primaryContact'][key] = value.capitalize()
+        api_base_url = USER_DATA_POST_API_URL.format(user_session_id)
+        api_base_url += build_query_string(constituent_account_data)
+
+        print("---------------------- API RESPONSE!!! ----------------------")
+
+    
+        print("---------------------- API URL!!! ----------------------")
+        print(api_base_url)
+        # I AM CODING HERE
+        return redirect(url_for('post_checkin'))
 
 if __name__ == '__main__':
     app.run(debug=True)
