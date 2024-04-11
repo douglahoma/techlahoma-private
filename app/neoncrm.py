@@ -27,6 +27,10 @@ class API:
     POINTS_URL = "https://api.neoncrm.com/neonws/services/api/customObjectRecord/listCustomObjectRecords?userSessionId={}&objectApiName=Points_c&customObjectSearchCriteriaList.customObjectSearchCriteria.criteriaField=Constituent_c&customObjectSearchCriteriaList.customObjectSearchCriteria.operator=EQUAL&customObjectSearchCriteriaList.customObjectSearchCriteria.value={}&customObjectOutputFieldList.customObjectOutputField.label=Points Activity&customObjectOutputFieldList.customObjectOutputField.columnName=name&customObjectOutputFieldList.customObjectOutputField.label=Created on&customObjectOutputFieldList.customObjectOutputField.columnName=createTime&customObjectOutputFieldList.customObjectOutputField.label=point_type&customObjectOutputFieldList.customObjectOutputField.columnName=point_type_c&customObjectOutputFieldList.customObjectOutputField.label=point_subtype&customObjectOutputFieldList.customObjectOutputField.columnName=point_subtype_c&customObjectOutputFieldList.customObjectOutputField.label=Points Awarded&customObjectOutputFieldList.customObjectOutputField.columnName=Points_Awarded_c&page.pageSize=200"
     # event checkin url requires these arguments: user_session_id, access_token, selected_group, checkin_record_name
     EVENT_CHECKIN_URL = "https://api.neoncrm.com/neonws/services/api/customObjectRecord/createCustomObjectRecord?userSessionId={}&customObjectRecord.objectApiName=Points_c&customObjectRecord.customObjectRecordDataList.customObjectRecordData.name=Constituent_c&customObjectRecord.customObjectRecordDataList.customObjectRecordData.value={}&customObjectRecord.customObjectRecordDataList.customObjectRecordData.name=type_for_api_c&customObjectRecord.customObjectRecordDataList.customObjectRecordData.value=check-in&customObjectRecord.customObjectRecordDataList.customObjectRecordData.name=subtype_for_api_c&customObjectRecord.customObjectRecordDataList.customObjectRecordData.value={}&customObjectRecord.customObjectRecordDataList.customObjectRecordData.name=name&customObjectRecord.customObjectRecordDataList.customObjectRecordData.value={}"
+    # event checkin url requires these arguments: user_session_id, access_token, data update subtype, record name
+    DATA_UPDATE_POINTS_OBJECT_URL = "https://api.neoncrm.com/neonws/services/api/customObjectRecord/createCustomObjectRecord?userSessionId={}&customObjectRecord.objectApiName=Points_c&customObjectRecord.customObjectRecordDataList.customObjectRecordData.name=Constituent_c&customObjectRecord.customObjectRecordDataList.customObjectRecordData.value={}&customObjectRecord.customObjectRecordDataList.customObjectRecordData.name=type_for_api_c&customObjectRecord.customObjectRecordDataList.customObjectRecordData.value=data update&customObjectRecord.customObjectRecordDataList.customObjectRecordData.name=subtype_for_api_c&customObjectRecord.customObjectRecordDataList.customObjectRecordData.value={}&customObjectRecord.customObjectRecordDataList.customObjectRecordData.name=name&customObjectRecord.customObjectRecordDataList.customObjectRecordData.value={}"
+    # linkedin data update custom object creation url requires these arguments: user_session_id, access_token, linkedin username/url, record name, update subtype
+    DATA_UPDATE_DATA_UPDATE_RECORD_CREATION_LINKEDIN_URL = "https://api.neoncrm.com/neonws/services/api/customObjectRecord/createCustomObjectRecord?userSessionId={}&customObjectRecord.objectApiName=Data_Updates_c&customObjectRecord.customObjectRecordDataList.customObjectRecordData.name=Constituent_c&customObjectRecord.customObjectRecordDataList.customObjectRecordData.value={}&customObjectRecord.customObjectRecordDataList.customObjectRecordData.name=linkedin_URL_or_username_c&customObjectRecord.customObjectRecordDataList.customObjectRecordData.value={}&customObjectRecord.customObjectRecordDataList.customObjectRecordData.name=name&customObjectRecord.customObjectRecordDataList.customObjectRecordData.value={}&customObjectRecord.customObjectRecordDataList.customObjectRecordData.name=update_type_c&customObjectRecord.customObjectRecordDataList.customObjectRecordData.value={}"
     ERROR_CODE_DESCRIPTION = {
         '1': "An unknown system error. Often, these are generated due to a badly formed API request or a problem in NeonCRM.",
         '2': "Indicates a temporary problem with NeonCRM's servers.",
@@ -149,7 +153,9 @@ class Constituent:
                 return datetime.strptime(date_string, "%m/%d/%y")
             points_dict = {}
             events = []
-            possible_data_updates = ['linkedin', 'employment', 'cell', 'profile']
+            # possible_data_updates = ['linkedin', 'employment', 'cell', 'profile']
+            # edited: many possible data updates removed pending approval by executive director
+            possible_data_updates = ['linkedin']
             eligible_for_checkin = True
             eligible_for_data_update = True
             for item in points_data["listCustomObjectRecordsResponse"]["searchResults"]["nameValuePairs"]:
@@ -221,6 +227,9 @@ class Constituent:
             if possible_data_updates:
                 # if any possible data updates haven't been done, pick the next one at random
                 next_data_update = random.choice(possible_data_updates)
+            if not possible_data_updates:
+                # and if there are none left, then they are not eligible for a data update
+                eligible_for_data_update = False
             next_data_update_points_value = None
             if next_data_update:
                     if next_data_update == 'cell' or next_data_update == 'profile':
