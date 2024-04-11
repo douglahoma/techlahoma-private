@@ -31,9 +31,10 @@
         <p>only <span class="points-left">{{points_to_next_reward}}</span> points away from:</p>
         <p>{{next_closest_reward}}</p>
     </div>
-    <a class="button-primary" href="/">Get More Points!</a>
+    {% endif %}
+    {% if eligible_for_data_update %}
+    <a class="button-primary" href="/{{next_data_update}}">Get More Points!</a>
     <p id="earnMorePointsText">Interested in earning more points? <br>We love giving out bonus points! <br>Click the button to share a bit about yourself and earn {{next_data_update_points_value}} more points today.</p>
-
     {% endif %}
 </main>
 <script defer="true">

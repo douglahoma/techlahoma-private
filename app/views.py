@@ -216,7 +216,7 @@ def dashboard():
                 else:
                     print("whoops")
                     ##! Fix this later, add error handling
-        linkedin = request.form.get('selected_group')
+        linkedin = request.form.get('linkedin')
         if linkedin:
             if points_dict['eligible_for_data_update'] == True:
                 print("about to print the linkedin url they gave")
