@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Contact Form{% endblock %}
+{% block content %}
+    <form action="" method="post">
+    <label for="phone">Please enter your phone number</label>
+    <input type="tel" name="phone" placeholder="(123) 456-7890" required/>
+    <div class="flex-row">
+        <input type="checkbox" name="phoneConsentStatus" required>
+        <label for="phoneConsentStatus">Opt-in to recieve text message updates</label>
+    </div>
+
+    <button class="button-primary" type="submit">Submit</button>
+    </form>
+{% endblock %}
