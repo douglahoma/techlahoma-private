@@ -253,7 +253,7 @@ def dashboard():
                     # and update the points_dict in the session
                     session['points_dict'] = points_dict
                     # and now let's push the actual information to the Neon CRM server in the form of a 'data update' object
-                    data_update_data_update_record_response = requests.post(neoncrm.API.DATA_UPDATE_DATA_UPDATE_RECORD_CREATION_LINKEDIN_URL.format(user_session_id, access_token, linkedin, points_record_name))
+                    data_update_data_update_record_response = requests.post(neoncrm.API.DATA_UPDATE_DATA_UPDATE_RECORD_CREATION_LINKEDIN_URL.format(user_session_id, access_token, linkedin, points_record_name, data_update_subtype))
                     print("just submitted the post request to add the 'data update' custom object record. About to print the response code.")
                     print(data_update_data_update_record_response)
                     print("that was the response code")
