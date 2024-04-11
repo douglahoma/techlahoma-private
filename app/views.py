@@ -257,7 +257,7 @@ def logout():
     session.clear()
     return redirect("https://techlahoma.app.neoncrm.com/np/logout.do?targetUrl=https://www.techlahoma.org")
 
-@app.route('/account_details')
+@app.route('/my-points')
 def account_details():
     return render_template('account_details.html',
     points_dict=session['points_dict'],
