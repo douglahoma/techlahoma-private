@@ -11,6 +11,7 @@ body {
   font-style: normal;
   color: white;
   height: 100%;
+  width: 100%;
   text-align: center;
   font-size: 24px;
 }
@@ -55,11 +56,59 @@ header img, .header-img {
 
 #bson_logo {
     width: 71px;
+    animation-name: onLoad;
+    animation-duration: 1.5s;
+    z-index: 1;
 
 }
 #techlahoma_logo {
-    width: 117px;
-    padding: 0px 25px;
+
+    animation-name: onLoad2;
+    animation-duration: 1.5s;
+    z-index: 0;
+}
+.techlahoma_logo_size {
+  width: 117px;
+  padding: 0px 25px;
+}
+.block_of_grey {
+  background-color: #363636;
+  fill: #363636;
+  z-index: 1;
+  width: 300px;
+  height: 100%;
+  position: absolute;
+  left: -300px;
+  animation-name: onLoad;
+  animation-duration: 1.5s;
+  z-index: 1;
+}
+
+.anim-wrapper {
+  height: 100%;
+  width: 100%;
+}
+
+@keyframes onLoad {
+  /* start of screen to the right, fly in to current positioning */
+  from {
+    transform: translateX(100vw);
+  }
+  to {
+    transform: translateX(0vw);
+  }
+}
+@keyframes onLoad2 {
+
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 /* ------------------ NAV MENU ------------------ */
@@ -84,6 +133,8 @@ header img, .header-img {
   font-size: 17px;
   display: block;
 }
+
+
 /* Style the hamburger menu */
 .topnav a.icon {
   background: #363636;
@@ -93,6 +144,19 @@ header img, .header-img {
   height: 20px;
   float: right;
   padding-top: 20px;
+  animation-name: delay;
+  animation-duration: 2.5s;
+}
+@keyframes delay {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 /* Add a grey background color on mouse-over */
 .topnav a:hover {
@@ -243,10 +307,11 @@ svg {
 
 form {
   display: flex;
+  box-sizing: border-box;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin: 24px;
+  padding: 24px;
   height: 100%;
   width: 100%;
 }

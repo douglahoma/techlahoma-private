@@ -15,8 +15,9 @@
     {% block header %}
     <header>
         <div id="header-img">
-            <img id="bson_logo"src="{{url_for('static', filename='techlahoma_bson_white.svg')}}" alt="">
-            <img id="techlahoma_logo"src="{{url_for('static', filename='techlahoma_text_white.png')}}" alt="">
+          <div class="header-img block_of_grey techlahoma_logo_size"></div>
+          <img class="header-img" id="bson_logo" src="{{url_for('static', filename='techlahoma_bson_white.svg')}}" alt="">
+          <img class="header-img techlahoma_logo_size" id="techlahoma_logo" src="{{url_for('static', filename='techlahoma_text_white.png')}}" alt="">
         </div>
                 <!-- Top Navigation Menu -->
       <div class="topnav">

@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 {% block title %}LinkedIn Form{% endblock %}
+{% block nav_links %}
+<a href="/dashboard">Dashboard</a>
+<a href="/my-points">My Points</a>
+{% endblock %}
 {% block content %}
     <form action="{{ url_for('dashboard') }}" method="post">
     <label for="linkedin">Please enter your LinkedIn profile URL</label>
