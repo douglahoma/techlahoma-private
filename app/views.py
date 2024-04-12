@@ -1,7 +1,7 @@
 import os
 import requests
 
-from . import app, neoncrm
+from . import app, neoncrm, timezones
 from flask import render_template, session, request, redirect, url_for
 from datetime import datetime
 
@@ -176,6 +176,7 @@ def dashboard():
     # grab all possible incentives and store them in the session
     incentives_list_of_tuples = neoncrm.Constituent.get_incentives(session["user_session_id"])
     session["all_incentives"] = incentives_list_of_tuples
+    formatted_date = timezones.Eastern.tznow().strftime("%m/%d/%y")
     points_dict = session['points_dict']
     if request.method == 'POST':
         # now let's get ready to post their new checkin event
@@ -191,8 +192,8 @@ def dashboard():
                 user_session_id = session['user_session_id']
                 access_token = session['access_token']
                 # and to include today's date in the name of the record, we'll need to get it
-                today = datetime.today()
-                formatted_date = today.strftime("%m/%d/%y")
+                #today = datetime.today()
+                #formatted_date = today.strftime("%m/%d/%y")
                 print(f"about to make a checkin record for {formatted_date}")
                 checkin_record_name = f'check-in: {selected_group} - {formatted_date}'
                 print(f"we will call the record {checkin_record_name}")
@@ -229,8 +230,8 @@ def dashboard():
                 user_session_id = session['user_session_id']
                 access_token = session['access_token']
                 # and to include today's date in the name of the record, we'll need to get it
-                today = datetime.today()
-                formatted_date = today.strftime("%m/%d/%y")
+                #today = datetime.today()
+                #formatted_date = today.strftime("%m/%d/%y")
                 print(f"about to make a data update Points record for {formatted_date}")
                 points_record_name = f'data update: linkedin - {formatted_date}'
                 print(f"we will call the record {points_record_name}")

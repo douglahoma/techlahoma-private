@@ -11,8 +11,9 @@ breadcrums leading us back to where it's defined in the source code.
 import os
 import requests
 import random
-from datetime import datetime
 
+from . import timezones
+from datetime import datetime
 from flask import session
 
 class API:
@@ -173,7 +174,10 @@ class Constituent:
             # Now we will use our helper function to sort the events list based on the date, in descending order
             events.sort(key=lambda x: parse_date(x["date"]), reverse=True)
             # We'll grab a formatted date of today to check for multiple check-ins
-            today_date = datetime.now().strftime("%m/%d/%y")
+            #today_date = datetime.now().strftime("%m/%d/%y")
+            today_date = (
+                (timezones.Eastern.tznow()).strftime("%m/%d/%y")
+            )
             # Then we can construct our final dictionary that holds the points total and the array of points records
             total_points = 0
             for item in events:
