@@ -45,6 +45,6 @@ And we deployed it in the cloud so people could access it.
 
 ## App Demo
 
-[app demo phone recording](https://github.com/douglahoma/techlahoma-private/blob/cf6a24a38fc07406d2531febd768dabb1cb839e6/readme-images/demo.gif)
+![app demo phone recording](https://github.com/douglahoma/techlahoma-private/blob/cf6a24a38fc07406d2531febd768dabb1cb839e6/readme-images/demo.gif)
 
 
