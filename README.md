@@ -20,7 +20,7 @@ So we set about to design a tool that would incentivize their constituents to ch
 
 ## The Product Idea
 
-[image] Flowchart [/image]
+![product flowchart](https://github.com/douglahoma/techlahoma-private/blob/cf6a24a38fc07406d2531febd768dabb1cb839e6/readme-images/bigflowchart.png)
 
 The basic idea of the project was simple:
 - Constituents would be prompted, in the course of the normal pre-meeting announcements/slides, to scan a QR code or go to an easy-to-remember URL.
@@ -45,6 +45,6 @@ And we deployed it in the cloud so people could access it.
 
 ## App Demo
 
-[image]app demo phone recording[/image]
+[app demo phone recording](https://github.com/douglahoma/techlahoma-private/blob/cf6a24a38fc07406d2531febd768dabb1cb839e6/readme-images/demo.gif)
 
 
