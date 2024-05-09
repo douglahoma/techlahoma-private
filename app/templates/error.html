@@ -7,10 +7,10 @@
 <img src="{{url_for('static', filename='techlahoma_bson_white.svg')}}" alt="">
 {% endblock %}
 {% block content %}
-{% if error %}
-<p>{{error.code}}</p>
-<h1>{{error.message}}</h1>
-<p>{{error.description}}</p>
+{% if code %}
+<p>{{code}}</p>
+<h1>{{message}}</h1>
+<p>{{description}}</p>
 {% else %}
 <p>Error Code</p>
 <h1>Error Message</h1>

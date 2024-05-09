@@ -14,7 +14,7 @@ import random
 
 from . import timezones
 from datetime import datetime
-from flask import session
+from flask import session, abort
 
 class API:
     """INTERFACE CLASS REPRESENTING NEONCRM AND HOW WE INTERACT WITH IT"""
@@ -59,7 +59,7 @@ class API:
         )
         session['access_token'] = (response.json().get('access_token'))
         # print the access_token for debugging
-        print(session['access_token'])
+        # print(session['access_token'])
 
     @classmethod
     def get_consituent_info(cls):
@@ -118,7 +118,7 @@ class Constituent:
         """
         retrieves all the point records associated with a given user
         """
-        print(API.POINTS_URL.format(user_session_id, access_token))
+        # print(API.POINTS_URL.format(user_session_id, access_token))
         return requests.get(API.POINTS_URL.format(user_session_id, access_token)).json()
 
     @classmethod
@@ -137,7 +137,7 @@ class Constituent:
                 elif pair["name"] == "name":
                     name = pair["value"]
             incentives_list.append((points_needed, name))
-        print(incentives_list)
+        # print(incentives_list)
         session['list_of_incentives'] = incentives_list
         return (incentives_list)
 
@@ -197,7 +197,7 @@ class Constituent:
                 "points": total_points,
                 "events": events
             }
-            print(points_dict)
+            # print(points_dict)
             # now let's get incentive data
             incentives = cls.get_incentives(user_session_id)
             earned_rewards = []
@@ -244,12 +244,14 @@ class Constituent:
             points_dict['next_data_update_points_value'] = next_data_update_points_value
             points_dict['eligible_for_checkin'] = eligible_for_checkin
             points_dict['eligible_for_data_update'] = eligible_for_data_update
-            print("about to print the points dict")
-            print(points_dict)
-            print("just printed the points dict")
+            # print("about to print the points dict")
+            # print(points_dict)
+            # print("just printed the points dict")
             return (points_dict)
         else:
+
             print("Failed to retrieve any points object records", points_response.status_code)
+            abort(500)
             return ({})
 
 

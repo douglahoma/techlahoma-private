@@ -2,11 +2,26 @@ import os
 import requests
 
 from . import app, neoncrm, timezones
-from flask import render_template, session, request, redirect, url_for
+from flask import render_template, session, request, redirect, url_for, abort
 from datetime import datetime
 
 redirect_uri = os.getenv("REDIRECT_URI")
 # logout_url = os.getenv("LOGOUT_URL")
+
+@app.errorhandler(404) # in case of a 404 error
+def page_not_found(e):
+    return error(
+        404,
+        "Page Not Found",
+        "The page you are looking for does not exist."
+        )
+@app.errorhandler(500) # in case of a 500 error
+def internal_server_error(e):
+    return error(
+        500,
+        "Internal Server Error",
+        "An internal server error occurred."
+        )
 
 @app.route('/')
 def landing():
@@ -38,18 +53,18 @@ def authorize():
             os.getenv("ORG_ID")
         )
     )
-    print("about the print the reponse we got from authenticating as an API user")
-    print(api_response.text)
-    print("just printed the reponse we got from authenticating as an API user")
+    # print("about the print the reponse we got from authenticating as an API user")
+    # print(api_response.text)
+    # print("just printed the reponse we got from authenticating as an API user")
     #
     # Then we can check the content of the response to our request
     if api_response.status_code == 200:
         # if the request itself (Note: distinct from the login attempt!) was
         # successful, we'll parse the response's JSON data
-        print("about the print the json of the reponse we got from authenticating as an API user")
+        # print("about the print the json of the reponse we got from authenticating as an API user")
         api_response_data = api_response.json()
-        print(api_response_data)
-        print("just finished printing the json of the reponse we got from authenticating as an API user")
+        # print(api_response_data)
+        # print("just finished printing the json of the reponse we got from authenticating as an API user")
         #
         # before checking to see if the login attempt worked.
         #
@@ -76,12 +91,12 @@ def authorize():
         if operation_result == 'SUCCESS':
             # if the api login WAS a success, we'll grab the userSessionId
             user_session_id = login_response.get('userSessionId')
-            print("about to print the user_session_id we got back")
-            print(user_session_id)
-            print("about to print the user_session_id we got back")
+            # print("about to print the user_session_id we got back")
+            # print(user_session_id)
+            # print("about to print the user_session_id we got back")
             if user_session_id:
                 # and print it out for logging/debugging purposes
-                print('Great news! Login worked. User session ID is: ', user_session_id)
+                # print('Great news! Login worked. User session ID is: ', user_session_id)
                 ###! FOR MOCKUP ONLY: And store it in the session (remember, it only lasts 10 minutes)
                 session['user_session_id'] = user_session_id
 
@@ -99,26 +114,28 @@ def authorize():
                     # if it was, parse it as JSON
                     constituent_data = constituent_info_response.json()
                     # print the response for debugging
-                    print("about to print the consituent account data we got back")
-                    print(constituent_data)
-                    print("that concludes the printing of the account data")
+                    # print("about to print the consituent account data we got back")
+                    # print(constituent_data)
+                    # print("that concludes the printing of the account data")
                     # then grab the data about the account
                     constituent_account_data = constituent_data['retrieveIndividualAccountResponse']['individualAccount']
                     # try to grab the preferred name, but failing that, get the first name
                     constituent_name = constituent_account_data['primaryContact'].get('preferredName', constituent_account_data['primaryContact'].get('firstName'))
                     # print the name for debugging
-                    print(f"the constituent's name (preferred name if included) is: {constituent_name}")
+                    # print(f"the constituent's name (preferred name if included) is: {constituent_name}")
                     # and save the user's name to the session
                     session['constituent_name'] = constituent_name
                     ### Deal with the exception later
                     # Now let's get the points records
                     points_records = neoncrm.Constituent.retrieve_user_point_records(session['user_session_id'], session['access_token'])
-                    print("now we are about to print the points records for the constituent")
-                    print(points_records)
-                    print("and that concludes the points records for the constituent")
+                    # print("now we are about to print the points records for the constituent")
+                    # print(points_records)
+                    # print("and that concludes the points records for the constituent")
                     # print(points_records["listCustomObjectRecordsResponse"]["searchResults"]["nameValuePairs"])
             else:
+                
                 print("login failed. No user session ID received.")
+                abort(500)
         else:
             # if the login was not a success, we will print out our terrible news
             print("I am mortified to admit that the api login failed. Maybe someone canceled the atlas user account? The system replied: ", operation_result)
@@ -130,10 +147,12 @@ def authorize():
                     error_message = error['errorMessage']
                     error_description = error_code_descriptions.get(error_code, "No description available.")
                     print(f"Error code: {error_code}, Message: {error_message}. Description: {error_description}")
+            abort(500)
     else:
         # if the HTTP request itself to the API failed to connect,
         # we'll admit our problem and print our the status code:
         print('Sadly, could not even connect to the api...', api_response.status_code)
+        abort(500)
 
     points_dict = neoncrm.Constituent.retrieve_user_point_records_dictionary(session['user_session_id'], session['access_token'])
 
@@ -183,9 +202,9 @@ def dashboard():
         selected_group = request.form.get('selected_group')
         if selected_group:
             if points_dict['eligible_for_checkin'] == True:
-                print("about to print the group they selected")
-                print(selected_group)
-                print("that was the group they selected")
+                # print("about to print the group they selected")
+                # print(selected_group)
+                # print("that was the group they selected")
                 # First, let's create the new Points record in NeonCRM
                 # we begin by creating our API request
                 # Note ---- we need to double-check that it's okay ------ WE HAVE NOT CODED THAT PART YET
@@ -194,36 +213,37 @@ def dashboard():
                 # and to include today's date in the name of the record, we'll need to get it
                 #today = datetime.today()
                 #formatted_date = today.strftime("%m/%d/%y")
-                print(f"about to make a checkin record for {formatted_date}")
+                # print(f"about to make a checkin record for {formatted_date}")
                 checkin_record_name = f'check-in: {selected_group} - {formatted_date}'
-                print(f"we will call the record {checkin_record_name}")
+                # print(f"we will call the record {checkin_record_name}")
                 # and format and send the API request
                 checkin_response = requests.post(neoncrm.API.EVENT_CHECKIN_URL.format(user_session_id, access_token, selected_group, checkin_record_name))
                 #print the raw response for debugging
-                print("just submitted the post request to check in to the event. About to print the response code.")
-                print(checkin_response)
-                print("that was the response code")
+                # print("just submitted the post request to check in to the event. About to print the response code.")
+                # print(checkin_response)
+                # print("that was the response code")
                 # then, check to see if checkin api call was successful
                 if checkin_response.status_code == 200:
                     # if it was, parse it as JSON
                     checkin_data = checkin_response.json()
                     # print it for debugging
-                    print("about to print the json of the reponse we got back")
-                    print(checkin_data)
-                    print("that was the json of the reponse we got back")
+                    # print("about to print the json of the reponse we got back")
+                    # print(checkin_data)
+                    # print("that was the json of the reponse we got back")
                     # and let's grab an updated points_dict
                     points_dict = neoncrm.Constituent.retrieve_user_point_records_dictionary(user_session_id, access_token)
                     # and update the points_dict in the session
                     session['points_dict'] = points_dict
                 else:
                     print("whoops")
+                    abort(500)
                     ##! Fix this later, add error handling
         linkedin = request.form.get('linkedin')
         if linkedin:
             if points_dict['eligible_for_data_update'] == True:
-                print("about to print the linkedin url they gave")
-                print(linkedin)
-                print("that was the linkedin profile they shared")
+                # print("about to print the linkedin url they gave")
+                # print(linkedin)
+                # print("that was the linkedin profile they shared")
                 # First, let's create the new Points record in NeonCRM
                 # we begin by creating our API request
                 # Note ---- we need to double-check that it's okay ------ WE HAVE NOT CODED THAT PART YET
@@ -232,47 +252,49 @@ def dashboard():
                 # and to include today's date in the name of the record, we'll need to get it
                 #today = datetime.today()
                 #formatted_date = today.strftime("%m/%d/%y")
-                print(f"about to make a data update Points record for {formatted_date}")
+                # print(f"about to make a data update Points record for {formatted_date}")
                 points_record_name = f'data update: linkedin - {formatted_date}'
-                print(f"we will call the record {points_record_name}")
+                # print(f"we will call the record {points_record_name}")
                 data_update_subtype = "linkedin"
                 # and format and send the API request
                 data_update_points_response = requests.post(neoncrm.API.DATA_UPDATE_POINTS_OBJECT_URL.format(user_session_id, access_token, data_update_subtype, points_record_name))
                 #print the raw response for debugging
-                print("just submitted the post request to check in to the event. About to print the response code.")
-                print(data_update_points_response)
-                print("that was the response code")
+                # print("just submitted the post request to check in to the event. About to print the response code.")
+                # print(data_update_points_response)
+                # print("that was the response code")
                 # then, check to see if checkin api call was successful
                 if data_update_points_response.status_code == 200:
                     # if it was, parse it as JSON
                     data_update_points_response_data = data_update_points_response.json()
                     # print it for debugging
-                    print("about to print the json of the reponse we got back")
-                    print(data_update_points_response_data)
-                    print("that was the json of the reponse we got back")
+                    # print("about to print the json of the reponse we got back")
+                    # print(data_update_points_response_data)
+                    # print("that was the json of the reponse we got back")
                     # and let's grab an updated points_dict
                     points_dict = neoncrm.Constituent.retrieve_user_point_records_dictionary(user_session_id, access_token)
                     # and update the points_dict in the session
                     session['points_dict'] = points_dict
                     # and now let's push the actual information to the Neon CRM server in the form of a 'data update' object
                     data_update_data_update_record_response = requests.post(neoncrm.API.DATA_UPDATE_DATA_UPDATE_RECORD_CREATION_LINKEDIN_URL.format(user_session_id, access_token, linkedin, points_record_name, data_update_subtype))
-                    print("just submitted the post request to add the 'data update' custom object record. About to print the response code.")
-                    print(data_update_data_update_record_response)
-                    print("that was the response code")
+                    # print("just submitted the post request to add the 'data update' custom object record. About to print the response code.")
+                    # print(data_update_data_update_record_response)
+                    # print("that was the response code")
                     # then, check to see if data update object creation api call was successful
                     if data_update_data_update_record_response.status_code == 200:
                         # if it was, parse it as JSON
                         data_update_data_update_record_response_data = data_update_data_update_record_response.json()
                         # print it for debugging
-                        print("about to print the json of the reponse we got back")
-                        print(data_update_data_update_record_response_data)
-                        print("that was the json of the reponse we got back")
+                        # print("about to print the json of the reponse we got back")
+                        # print(data_update_data_update_record_response_data)
+                        # print("that was the json of the reponse we got back")
                         # and let's grab an updated points_dict
                     else:
                         print("data update record creation failed")
+                        abort(500)
                         ##! Fix this later, add error handling
                 else:
                     print("whoops")
+                    abort(500)
                     ##! Fix this later, add error handling
 
     constituent_name = session['constituent_name']
@@ -300,8 +322,14 @@ def dashboard():
 
 # Error Page
 @app.route('/error')
-def error():
-    return render_template('error.html')
+def error(code, message, description):
+
+    return render_template(
+        'error.html',
+        code=code,
+        message=message,
+        description=description,
+        )
 
 # Logout Route
 @app.route('/logout')

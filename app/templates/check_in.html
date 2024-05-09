@@ -15,9 +15,9 @@
             <option value="" disabled selected>Select an Event</option>
             {% for group in check_in_options %}
                 {% if group == "Atlas Demo Day" %}
-                    <option value="{{ group }}">{{ group }}</option>
+                    <option value="{{ group }}" disabled>{{ group }}</option>
                 {% else %}
-                    <option value="{{ group }}" disabled >{{ group }}</option>
+                    <option value="{{ group }}" >{{ group }}</option>
                 {% endif %}
             {% endfor %}
         </select>
